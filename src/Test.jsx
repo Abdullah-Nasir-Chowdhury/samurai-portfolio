@@ -1129,25 +1129,25 @@ function ProjectsPage({ playSound, clickSoundRef }) {
  }, []);
   const projects = [
     {
-      title: 'Project Name 1',
-      description: 'A detailed description of your project, its goals, and the technologies used.',
-      tech: ['React', 'Node.js', 'MongoDB'],
-      link: 'https://github.com/your-username/project-1',
-      demo: 'https://your-demo-link.com'
+      title: 'Apnea Detector',
+      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
+      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
+      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4'
     },
     {
-      title: 'Project Name 2',
-      description: 'Another project description highlighting your skills and accomplishments.',
-      tech: ['Python', 'TensorFlow', 'OpenCV'],
-      link: 'https://github.com/your-username/project-2',
+      title: 'E-commerce App for ASUS',
+      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
+      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
       demo: null
     },
     {
-      title: 'Project Name 3',
-      description: 'Description of a third project showcasing different aspects of your expertise.',
-      tech: ['Vue.js', 'Express', 'PostgreSQL'],
-      link: 'https://github.com/your-username/project-3',
-      demo: 'https://your-demo-link-3.com'
+      title: 'Full Stack IoT Application',
+      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
+      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
+      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P'
     }
   ];
 
