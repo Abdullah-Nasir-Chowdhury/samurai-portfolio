@@ -48,14 +48,14 @@ useEffect(() => {
 
       // Click Sound
       clickSoundRef.current = new Audio('/audio/a6.mp3');
-      clickSoundRef.current.volume = 0.5;
+      clickSoundRef.current.volume = 0.7;
       clickSoundRef.current.addEventListener('error', (e) => {
         console.error('Click sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
 
       // Page Switch Sound
       pageSwitchSoundRef.current = new Audio('/audio/a6.mp3');
-      pageSwitchSoundRef.current.volume = 0.4;
+      pageSwitchSoundRef.current.volume = 0.7;
       pageSwitchSoundRef.current.addEventListener('error', (e) => {
         console.error('Page switch sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
