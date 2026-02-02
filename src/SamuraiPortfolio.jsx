@@ -973,19 +973,21 @@ function ResearchPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  
   useEffect(() => {
-  const shimmerInterval = setInterval(() => {
-    const kanjiElement = document.querySelector('.kanji-title');
-    if (kanjiElement) {
-      kanjiElement.classList.add('kanji-shimmer-loop');
-      setTimeout(() => {
-        kanjiElement.classList.remove('kanji-shimmer-loop');
-      }, 2000);
-    }
-  }, 10000);
+    const shimmerInterval = setInterval(() => {
+      const kanjiElement = document.querySelector('.kanji-title');
+      if (kanjiElement) {
+        kanjiElement.classList.add('kanji-shimmer-loop');
+        setTimeout(() => {
+          kanjiElement.classList.remove('kanji-shimmer-loop');
+        }, 2000);
+      }
+    }, 10000);
 
-  return () => clearInterval(shimmerInterval);
- }, []);
+    return () => clearInterval(shimmerInterval);
+  }, []);
+  
   const publications = [
     {
       title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
@@ -1019,7 +1021,27 @@ function ResearchPage({ playSound, clickSoundRef }) {
       link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning']
     },
+  ];
 
+  const profiles = [
+    {
+      name: 'Google Scholar',
+      icon: '学',
+      link: 'https://scholar.google.com/citations?user=tHsPqpkAAAAJ&hl=en',
+      description: 'Citation metrics & publications'
+    },
+    {
+      name: 'ResearchGate',
+      icon: '究',
+      link: 'https://www.researchgate.net/profile/Abdulla-Chowdhury?ev=hdr_xprf&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6ImhvbWUiLCJwcmV2aW91c1BhZ2UiOiJsb2dpbiIsInBvc2l0aW9uIjoiZ2xvYmFsSGVhZGVyIn19',
+      description: 'Research network & collaborations'
+    },
+    {
+      name: 'IEEE Xplore',
+      icon: '電',
+      link: 'https://ieeexplore.ieee.org/author/580270477937590',
+      description: 'IEEE publications & proceedings'
+    }
   ];
 
   return (
@@ -1039,6 +1061,39 @@ function ResearchPage({ playSound, clickSoundRef }) {
           <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
             CVLab, University of Tsukuba, Japan
           </p>
+        </div>
+
+        {/* Academic Profiles */}
+        <div className="mb-12 fade-in" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+            ACADEMIC PROFILES
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            {profiles.map((profile, i) => (
+            <a
+                key={i}
+                href={profile.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playSound(clickSoundRef)}
+                className="p-6 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 hover:bg-black/60 transition-all duration-300 group"
+                style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+              >
+                <div className="text-5xl mb-3 font-bold group-hover:scale-110 transition-transform duration-300 text-center"
+                     style={{ 
+                       fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif',
+                       textShadow: '0 0 15px rgba(220, 38, 38, 0.4)',
+                       color: '#fca5a5'
+                     }}>
+                  {profile.icon}
+                </div>
+                <h3 className="text-xl font-bold text-red-100 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+                  {profile.name}
+                </h3>
+                <p className="text-gray-400 text-sm">{profile.description}</p>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Research Interests */}
@@ -1104,7 +1159,6 @@ function ResearchPage({ playSound, clickSoundRef }) {
     </div>
   );
 }
-
 // Projects Page Component
 function ProjectsPage({ playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);
