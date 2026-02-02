@@ -544,7 +544,7 @@ function HomePage() {
                 key={i}
                 className="absolute top-1/2 left-1/2"
                 style={{
-                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-145px)`,
+                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-180px)`,
                 }}
               >
                 <Flame 
