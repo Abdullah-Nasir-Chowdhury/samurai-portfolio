@@ -9,74 +9,125 @@ export default function SamuraiPortfolio() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   
-  // Audio refs
-  const bgMusicRef = useRef(null);
-  const clickSoundRef = useRef(null);
-  const pageSwitchSoundRef = useRef(null);
+// Audio refs
+const bgMusicRef = useRef(null);
+const clickSoundRef = useRef(null);
+const pageSwitchSoundRef = useRef(null);
+const [audioInitialized, setAudioInitialized] = useState(false);
 
-  useEffect(() => {
-    setIsLoaded(true);
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+useEffect(() => {
+  setIsLoaded(true);
+  const handleMouseMove = (e) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+  window.addEventListener('mousemove', handleMouseMove);
+  return () => window.removeEventListener('mousemove', handleMouseMove);
+}, []);
 
-  // Initialize audio
-  useEffect(() => {
-    const publicUrl = process.env.PUBLIC_URL;
-    // Background Music - Japanese/Samurai themed (using a placeholder URL)
-    bgMusicRef.current = new Audio(`${publicUrl}/audio/moonlight.mp3`);
-    bgMusicRef.current.loop = true;
-    bgMusicRef.current.volume = 0.9;
+// Initialize audio
+useEffect(() => {
+  const initAudio = () => {
+    try {
+      // Use absolute paths from public folder - this works on Vercel
+      // Files should be placed in: public/audio/moonlight.mp3 and public/audio/a6.mp3
+      
+      // Background Music
+      bgMusicRef.current = new Audio('/audio/moonlight.mp3');
+      bgMusicRef.current.loop = true;
+      bgMusicRef.current.volume = 0.3;
+      
+      // Add error handlers
+      bgMusicRef.current.addEventListener('error', (e) => {
+        console.error('Background music failed to load. Make sure moonlight.mp3 exists in public/audio/', e);
+      });
+      
+      bgMusicRef.current.addEventListener('canplaythrough', () => {
+        console.log('Background music loaded successfully');
+        setAudioInitialized(true);
+      });
 
-    // Click Sound - Sword slash
-    clickSoundRef.current = new Audio(`${publicUrl}/audio/a6.mp3`);
-    clickSoundRef.current.volume = 0.5;
+      // Click Sound
+      clickSoundRef.current = new Audio('/audio/a6.mp3');
+      clickSoundRef.current.volume = 0.5;
+      clickSoundRef.current.addEventListener('error', (e) => {
+        console.error('Click sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
+      });
 
-    // Page Switch Sound - Wind/whoosh
-    pageSwitchSoundRef.current = new Audio(`${publicUrl}/audio/a6.mp3`);
-    pageSwitchSoundRef.current.volume = 0.4;
-
-    return () => {
-      // Cleanup
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause();
-        bgMusicRef.current = null;
-      }
-    };
-  }, []);
-
-  // Toggle all audio (music and sound effects)
-  const toggleAudio = () => {
-    if (isMusicPlaying || !isMuted) {
-      // Turn everything off
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause();
-      }
-      setIsMusicPlaying(false);
-      setIsMuted(true);
-    } else {
-      // Turn everything on
-      if (bgMusicRef.current) {
-        bgMusicRef.current.play().catch(e => console.log('Audio play failed:', e));
-      }
-      setIsMusicPlaying(true);
-      setIsMuted(false);
+      // Page Switch Sound
+      pageSwitchSoundRef.current = new Audio('/audio/a6.mp3');
+      pageSwitchSoundRef.current.volume = 0.4;
+      pageSwitchSoundRef.current.addEventListener('error', (e) => {
+        console.error('Page switch sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
+      });
+      
+      // Preload audio
+      bgMusicRef.current.load();
+      clickSoundRef.current.load();
+      pageSwitchSoundRef.current.load();
+      
+    } catch (error) {
+      console.error('Audio initialization failed:', error);
     }
   };
 
-  // Play sound effect - only on click, not hover
-  const playSound = (soundRef) => {
-    if (!isMuted && soundRef.current) {
-      // Stop any currently playing instance and reset
-      soundRef.current.pause();
-      soundRef.current.currentTime = 0;
-      // Play the sound
-      soundRef.current.play().catch(e => console.log('Sound play failed:', e));
+  initAudio();
+
+  return () => {
+    // Cleanup
+    if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+      bgMusicRef.current.src = '';
+      bgMusicRef.current = null;
+    }
+    if (clickSoundRef.current) {
+      clickSoundRef.current.src = '';
+      clickSoundRef.current = null;
+    }
+    if (pageSwitchSoundRef.current) {
+      pageSwitchSoundRef.current.src = '';
+      pageSwitchSoundRef.current = null;
     }
   };
+}, []);
+
+// Toggle all audio (music and sound effects)
+const toggleAudio = async () => {
+  if (isMusicPlaying || !isMuted) {
+    // Turn everything off
+    if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+    }
+    setIsMusicPlaying(false);
+    setIsMuted(true);
+  } else {
+    // Turn everything on
+    if (bgMusicRef.current) {
+      try {
+        await bgMusicRef.current.play();
+        setIsMusicPlaying(true);
+        setIsMuted(false);
+      } catch (error) {
+        console.error('Audio play failed:', error);
+        // Show user-friendly error
+        alert('Unable to play audio. Please make sure:\n1. Audio files exist in public/audio/ folder\n2. You have interacted with the page (browsers require user interaction for audio)');
+      }
+    }
+  }
+};
+
+// Play sound effect
+const playSound = async (soundRef) => {
+  if (!isMuted && soundRef.current) {
+    try {
+      // Clone the audio for overlapping sounds
+      const sound = soundRef.current.cloneNode();
+      sound.volume = soundRef.current.volume;
+      await sound.play();
+    } catch (error) {
+      console.error('Sound play failed:', error);
+    }
+  }
+};
 
   const socialLinks = [
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/anc19990/', color: 'hover:text-blue-400' },
