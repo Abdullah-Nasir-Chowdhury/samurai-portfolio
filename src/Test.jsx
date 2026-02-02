@@ -1283,7 +1283,7 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
               onClick={() => playSound(clickSoundRef)}
               className="text-red-400 hover:text-red-300 text-lg transition-colors"
             >
-              abdullahnasirchowdhury1@gmail.com
+              Click to Email Me
             </a>
           </div>
         </div>
