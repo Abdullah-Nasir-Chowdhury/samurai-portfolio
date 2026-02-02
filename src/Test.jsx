@@ -25,6 +25,7 @@ export default function SamuraiPortfolio() {
 
   // Initialize audio
   useEffect(() => {
+    const publicUrl = process.env.PUBLIC_URL;
     // Background Music - Japanese/Samurai themed (using a placeholder URL)
     bgMusicRef.current = new Audio(`${publicUrl}/audio/moonlight.mp3`);
     bgMusicRef.current.loop = true;
