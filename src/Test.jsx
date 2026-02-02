@@ -26,16 +26,16 @@ export default function SamuraiPortfolio() {
   // Initialize audio
   useEffect(() => {
     // Background Music - Japanese/Samurai themed (using a placeholder URL)
-    bgMusicRef.current = new Audio('/assets/audio/moonlight.mp3');
+    bgMusicRef.current = new Audio(`${publicUrl}/audio/moonlight.mp3`);
     bgMusicRef.current.loop = true;
     bgMusicRef.current.volume = 0.9;
 
     // Click Sound - Sword slash
-    clickSoundRef.current = new Audio('/assets/audio/a6.mp3');
+    clickSoundRef.current = new Audio(`${publicUrl}/audio/a6.mp3`);
     clickSoundRef.current.volume = 0.5;
 
     // Page Switch Sound - Wind/whoosh
-    pageSwitchSoundRef.current = new Audio('/assets/audio/a6.mp3');
+    pageSwitchSoundRef.current = new Audio(`${publicUrl}/audio/a6.mp3`);
     pageSwitchSoundRef.current.volume = 0.4;
 
     return () => {
