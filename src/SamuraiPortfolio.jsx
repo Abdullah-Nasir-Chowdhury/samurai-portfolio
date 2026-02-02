@@ -698,21 +698,38 @@ function ResearchPage() {
 
   const publications = [
     {
-      title: 'Your Research Paper Title Here',
+      title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
       authors: 'C.A. Nasir, et al.',
-      venue: 'Conference: IEEE Xplore 2023',
-      abstract: 'Brief description of your research work and its contributions to the field.',
-      link: 'https://arxiv.org/your-paper',
+      venue: '2025 28th International Conference on Computer and Information Technology (ICCIT)',
+      abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments. By embedding deceptive comments within code snippets, we demonstrate how LLMs can be manipulated into generating harmful or unintended outputs.',
+      link: '10.1109/ISACC65211.2025.10969286',
+      tags: ['Machine Learning', 'AI']
+    },
+    {
+      title: 'Prototype and Simulation of a Real-Time GPS and PTS Architecture',
+      authors: 'C.A. Nasir, et al.',
+      venue: '2025 International Conference on Quantum Photonics, Artificial Intelligence, and Networking (QPAIN)',
+      abstract: 'Our research paper explores the creation of a realtime Global Positioning System (GPS) and Passenger Tracking System (PTS), covering simulation, hardware setup, and prototype evaluation. ',
+      link: '10.1109/QPAIN66474.2025.11172005',
       tags: ['Computer Vision', 'Deep Learning']
     },
     {
-      title: 'Another Research Paper',
-      authors: 'C.A. Nasir, Co-author Name',
-      venue: 'Conference: IEEE Xplore 2023',
-      abstract: 'Another brief description of your research contribution.',
-      link: 'https://arxiv.org/your-paper-2',
+      title: 'Performance Analysis of Tesseract and EasyOCR on the Novel Bangla-CrossHair Dataset',
+      authors: 'C.A. Nasir, et al.',
+      venue: '2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)',
+      abstract: 'This paper presents a comparative study of key metrics for OCR engines in Bangla language processing. PyTesseract (a Python wrapper for Tesseract OCR) and EasyOCR were benchmarked on a novel dataset, "Bangla-CrossHair," created for testing OCR engines. ',
+      link: '10.1109/ISACC65211.2025.10969286',
       tags: ['Machine Learning', 'AI']
-    }
+    },
+    {
+      title: 'ALPR: ResNet50 powered Bangla License Plate Detection and OCR using Root Mean Square Prop Optimizer and Linear SVM Classifier',
+      authors: 'C.A. Nasir, et al.',
+      venue: '2024 IEEE 9th International Conference for Convergence in Technology (I2CT)',
+      abstract: 'This paper implements the MATLAB Image Processing Toolbox in detecting the license plate region using several user-defined functions in order to pre-process and process the image up until the point of extraction of characters.',
+      link: '10.1109/I2CT61223.2024.10543675',
+      tags: ['Computer Vision', 'Deep Learning']
+    },
+
   ];
 
   return (
