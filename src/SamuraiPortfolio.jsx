@@ -619,7 +619,7 @@ function HomePage() {
           <div className="h-px w-12 bg-red-600" />
         </div>
         <p className="mt-4 text-red-200 text-sm tracking-wide" style={{ fontFamily: '"Noto Serif JP", serif' }}>
-          道 • The Way of Code • Research Student @ CVLab, Tsukuba University
+          道 • Research Student @ CVLab, Tsukuba University
         </p>
       </div>
 
