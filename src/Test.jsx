@@ -964,6 +964,148 @@ function HomePage({ playSound, clickSoundRef }) {
   );
 }
 
+// // Research Page Component
+// function ResearchPage({ playSound, clickSoundRef }) {
+//   const [showButterflies, setShowButterflies] = useState(true);
+
+//   useEffect(() => {
+//     setShowButterflies(true);
+//     const timer = setTimeout(() => setShowButterflies(false), 12000);
+//     return () => clearTimeout(timer);
+//   }, []);
+//   useEffect(() => {
+//   const shimmerInterval = setInterval(() => {
+//     const kanjiElement = document.querySelector('.kanji-title');
+//     if (kanjiElement) {
+//       kanjiElement.classList.add('kanji-shimmer-loop');
+//       setTimeout(() => {
+//         kanjiElement.classList.remove('kanji-shimmer-loop');
+//       }, 2000);
+//     }
+//   }, 10000);
+
+//   return () => clearInterval(shimmerInterval);
+//  }, []);
+//   const publications = [
+//     {
+//       title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
+//       authors: 'C.A. Nasir, et al.',
+//       venue: '2025 28th International Conference on Computer and Information Technology (ICCIT)',
+//       abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments. By embedding deceptive comments within code snippets, we demonstrate how LLMs can be manipulated into generating harmful or unintended outputs.',
+//       link: 'https://ieeexplore.ieee.org/document/10543675',
+//       tags: ['Machine Learning', 'AI']
+//     },
+//     {
+//       title: 'Prototype and Simulation of a Real-Time GPS and PTS Architecture',
+//       authors: 'C.A. Nasir, et al.',
+//       venue: '2025 International Conference on Quantum Photonics, Artificial Intelligence, and Networking (QPAIN)',
+//       abstract: 'Our research paper explores the creation of a realtime Global Positioning System (GPS) and Passenger Tracking System (PTS), covering simulation, hardware setup, and prototype evaluation. ',
+//       link: 'https://ieeexplore.ieee.org/document/11172005',
+//       tags: ['Computer Vision', 'Deep Learning']
+//     },
+//     {
+//       title: 'Performance Analysis of Tesseract and EasyOCR on the Novel Bangla-CrossHair Dataset',
+//       authors: 'C.A. Nasir, et al.',
+//       venue: '2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)',
+//       abstract: 'This paper presents a comparative study of key metrics for OCR engines in Bangla language processing. PyTesseract (a Python wrapper for Tesseract OCR) and EasyOCR were benchmarked on a novel dataset, "Bangla-CrossHair," created for testing OCR engines. ',
+//       link: 'https://ieeexplore.ieee.org/document/10969286',
+//       tags: ['Machine Learning', 'AI']
+//     },
+//     {
+//       title: 'ALPR: ResNet50 powered Bangla License Plate Detection and OCR using Root Mean Square Prop Optimizer and Linear SVM Classifier',
+//       authors: 'C.A. Nasir, et al.',
+//       venue: '2024 IEEE 9th International Conference for Convergence in Technology (I2CT)',
+//       abstract: 'This paper implements the MATLAB Image Processing Toolbox in detecting the license plate region using several user-defined functions in order to pre-process and process the image up until the point of extraction of characters.',
+//       link: 'https://ieeexplore.ieee.org/document/10543675',
+//       tags: ['Computer Vision', 'Deep Learning']
+//     },
+
+//   ];
+
+//   return (
+//     <div className="min-h-screen px-6 py-24">
+//       {showButterflies && <MultipleButterflies />}
+      
+//       <div className="max-w-5xl mx-auto">
+//         {/* Header */}
+//         <div className="text-center mb-16 fade-in">
+//           <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
+//               style={{ 
+//                 fontFamily: '"Cinzel", serif',
+//                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
+//               }}>
+//             研究 • Research
+//           </h1>
+//           <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+//             CVLab, University of Tsukuba, Japan
+//           </p>
+//         </div>
+
+//         {/* Research Interests */}
+//         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
+//           <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+//             RESEARCH INTERESTS
+//           </h2>
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//             {['Computer Vision', 'Deep Learning', 'Image Processing', 'Pattern Recognition'].map((interest, i) => (
+//               <div 
+//                 key={i} 
+//                 className="p-4 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm"
+//               >
+//                 <p className="text-red-200" style={{ fontFamily: '"Rajdhani", sans-serif' }}>{interest}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Publications */}
+//         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
+//           <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+//             PUBLICATIONS
+//           </h2>
+//           <div className="space-y-6">
+//             {publications.map((pub, i) => (
+//               <div 
+//                 key={i}
+//                 className="p-6 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 transition-all duration-300"
+//                 style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+//               >
+//                 <h3 className="text-xl font-bold text-red-100 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+//                   {pub.title}
+//                 </h3>
+//                 <p className="text-red-300 mb-2">{pub.authors}</p>
+//                 <p className="text-gray-400 italic mb-3">{pub.venue}</p>
+//                 <p className="text-gray-300 mb-4">{pub.abstract}</p>
+//                 <div className="flex flex-wrap gap-2 mb-4">
+//                   {pub.tags.map((tag, j) => (
+//                     <span 
+//                       key={j}
+//                       className="px-3 py-1 bg-red-900/50 text-red-200 text-sm rounded-full border border-red-800"
+//                     >
+//                       {tag}
+//                     </span>
+//                   ))}
+//                 </div>
+//                 <a 
+//                   href={pub.link}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   onClick={() => playSound(clickSoundRef)}
+//                   className="inline-block px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+//                   style={{ fontFamily: '"Rajdhani", sans-serif' }}
+//                 >
+//                   READ PAPER
+//                 </a>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+// Research Page Component
+// Research Page Component
 // Research Page Component
 function ResearchPage({ playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);
@@ -973,19 +1115,21 @@ function ResearchPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  
   useEffect(() => {
-  const shimmerInterval = setInterval(() => {
-    const kanjiElement = document.querySelector('.kanji-title');
-    if (kanjiElement) {
-      kanjiElement.classList.add('kanji-shimmer-loop');
-      setTimeout(() => {
-        kanjiElement.classList.remove('kanji-shimmer-loop');
-      }, 2000);
-    }
-  }, 10000);
+    const shimmerInterval = setInterval(() => {
+      const kanjiElement = document.querySelector('.kanji-title');
+      if (kanjiElement) {
+        kanjiElement.classList.add('kanji-shimmer-loop');
+        setTimeout(() => {
+          kanjiElement.classList.remove('kanji-shimmer-loop');
+        }, 2000);
+      }
+    }, 10000);
 
-  return () => clearInterval(shimmerInterval);
- }, []);
+    return () => clearInterval(shimmerInterval);
+  }, []);
+  
   const publications = [
     {
       title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
@@ -1019,7 +1163,27 @@ function ResearchPage({ playSound, clickSoundRef }) {
       link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning']
     },
+  ];
 
+  const profiles = [
+    {
+      name: 'Google Scholar',
+      icon: '学',
+      link: 'https://scholar.google.com/citations?user=tHsPqpkAAAAJ&hl=en',
+      description: 'Citation metrics & publications'
+    },
+    {
+      name: 'ResearchGate',
+      icon: '究',
+      link: 'https://www.researchgate.net/profile/Abdulla-Chowdhury?ev=hdr_xprf&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6ImhvbWUiLCJwcmV2aW91c1BhZ2UiOiJsb2dpbiIsInBvc2l0aW9uIjoiZ2xvYmFsSGVhZGVyIn19',
+      description: 'Research network & collaborations'
+    },
+    {
+      name: 'IEEE Xplore',
+      icon: '電',
+      link: 'https://ieeexplore.ieee.org/author/580270477937590',
+      description: 'IEEE publications & proceedings'
+    }
   ];
 
   return (
@@ -1039,6 +1203,39 @@ function ResearchPage({ playSound, clickSoundRef }) {
           <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
             CVLab, University of Tsukuba, Japan
           </p>
+        </div>
+
+        {/* Academic Profiles */}
+        <div className="mb-12 fade-in" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+            ACADEMIC PROFILES
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            {profiles.map((profile, i) => (
+            <a
+                key={i}
+                href={profile.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playSound(clickSoundRef)}
+                className="p-6 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 hover:bg-black/60 transition-all duration-300 group"
+                style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+              >
+                <div className="text-5xl mb-3 font-bold group-hover:scale-110 transition-transform duration-300 text-center"
+                     style={{ 
+                       fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif',
+                       textShadow: '0 0 15px rgba(220, 38, 38, 0.4)',
+                       color: '#fca5a5'
+                     }}>
+                  {profile.icon}
+                </div>
+                <h3 className="text-xl font-bold text-red-100 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+                  {profile.name}
+                </h3>
+                <p className="text-gray-400 text-sm">{profile.description}</p>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Research Interests */}
@@ -1104,7 +1301,6 @@ function ResearchPage({ playSound, clickSoundRef }) {
     </div>
   );
 }
-
 // Projects Page Component
 function ProjectsPage({ playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);

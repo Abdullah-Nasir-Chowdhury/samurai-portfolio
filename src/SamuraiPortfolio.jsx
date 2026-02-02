@@ -301,9 +301,14 @@ const playSound = async (soundRef) => {
       {/* Inline Styles for Animations */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
-        * {
-        cursor: none !important;
-        } 
+        
+        /* Hide default cursor only on non-touch devices */
+        @media (hover: hover) and (pointer: fine) {
+          * {
+            cursor: none !important;
+          }
+        }
+        
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -511,6 +516,38 @@ const playSound = async (soundRef) => {
         .butterfly-wing-right {
           animation: butterflyWingRight 0.3s ease-in-out infinite;
         }
+        
+        @keyframes shimmer {
+        0% {
+            background-position: -200% center;
+        }
+        100% {
+            background-position: 200% center;
+        }
+        }
+
+        .kanji-shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 255, 255, 0.9) 40%,
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, 0.9) 60%,
+            rgba(255, 255, 255, 0.9) 100%
+        );
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 2s ease-in-out infinite;
+        animation-iteration-count: 1;
+        animation-delay: 0s;
+        }
+
+        .kanji-shimmer-loop {
+        animation: shimmer 2s ease-in-out;
+        animation-delay: 0s;
+        }
       `}</style>
     </div>
   );
@@ -519,8 +556,20 @@ const playSound = async (soundRef) => {
 function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    // Detect if device supports touch
+    const checkTouchDevice = () => {
+      return (
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
+      );
+    };
+    
+    setIsTouchDevice(checkTouchDevice());
+
     const handleMouseMove = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
@@ -539,6 +588,11 @@ function CustomCursor() {
       window.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
+
+  // Don't render cursor on touch devices
+  if (isTouchDevice) {
+    return null;
+  }
 
   return (
     <>
@@ -694,6 +748,21 @@ function HomePage({ playSound, clickSoundRef }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Kanji Shimmer Effect Loop
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
+
+  return () => clearInterval(shimmerInterval);
+ }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies />}
@@ -753,7 +822,7 @@ function HomePage({ playSound, clickSoundRef }) {
                 key={i}
                 className="absolute top-1/2 left-1/2"
                 style={{
-                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-180px)`,
+                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-172px)`,
                 }}
               >
                 <Flame 
@@ -809,12 +878,12 @@ function HomePage({ playSound, clickSoundRef }) {
           transitionDelay: '700ms'
         }}
       >
-        <h1 className="text-6xl md:text-7xl font-bold mb-4 text-red-50"
-            style={{ 
-              fontFamily: '"Cinzel", serif',
-              textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(0, 0, 0, 0.8)'
-            }}>
-          蝶踊り
+        <h1 className="kanji-title text-6xl md:text-7xl font-bold mb-4 text-red-50"
+        style={{ 
+            fontFamily: '"Cinzel", serif',
+            textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(0, 0, 0, 0.8)'
+        }}>
+            蝶踊り
         </h1>
         <div className="flex items-center justify-center gap-4 text-red-400">
           <div className="h-px w-12 bg-red-600" />
@@ -904,14 +973,26 @@ function ResearchPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   const publications = [
     {
       title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
       authors: 'C.A. Nasir, et al.',
       venue: '2025 28th International Conference on Computer and Information Technology (ICCIT)',
       abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments. By embedding deceptive comments within code snippets, we demonstrate how LLMs can be manipulated into generating harmful or unintended outputs.',
-      link: '10.1109/ISACC65211.2025.10969286',
+      link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Machine Learning', 'AI']
     },
     {
@@ -919,7 +1000,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
       authors: 'C.A. Nasir, et al.',
       venue: '2025 International Conference on Quantum Photonics, Artificial Intelligence, and Networking (QPAIN)',
       abstract: 'Our research paper explores the creation of a realtime Global Positioning System (GPS) and Passenger Tracking System (PTS), covering simulation, hardware setup, and prototype evaluation. ',
-      link: '10.1109/QPAIN66474.2025.11172005',
+      link: 'https://ieeexplore.ieee.org/document/11172005',
       tags: ['Computer Vision', 'Deep Learning']
     },
     {
@@ -927,7 +1008,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
       authors: 'C.A. Nasir, et al.',
       venue: '2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)',
       abstract: 'This paper presents a comparative study of key metrics for OCR engines in Bangla language processing. PyTesseract (a Python wrapper for Tesseract OCR) and EasyOCR were benchmarked on a novel dataset, "Bangla-CrossHair," created for testing OCR engines. ',
-      link: '10.1109/ISACC65211.2025.10969286',
+      link: 'https://ieeexplore.ieee.org/document/10969286',
       tags: ['Machine Learning', 'AI']
     },
     {
@@ -935,7 +1016,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
       authors: 'C.A. Nasir, et al.',
       venue: '2024 IEEE 9th International Conference for Convergence in Technology (I2CT)',
       abstract: 'This paper implements the MATLAB Image Processing Toolbox in detecting the license plate region using several user-defined functions in order to pre-process and process the image up until the point of extraction of characters.',
-      link: '10.1109/I2CT61223.2024.10543675',
+      link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning']
     },
 
@@ -948,7 +1029,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
@@ -1033,28 +1114,40 @@ function ProjectsPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   const projects = [
     {
-      title: 'Project Name 1',
-      description: 'A detailed description of your project, its goals, and the technologies used.',
-      tech: ['React', 'Node.js', 'MongoDB'],
-      link: 'https://github.com/your-username/project-1',
-      demo: 'https://your-demo-link.com'
+      title: 'Apnea Detector',
+      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
+      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
+      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4'
     },
     {
-      title: 'Project Name 2',
-      description: 'Another project description highlighting your skills and accomplishments.',
-      tech: ['Python', 'TensorFlow', 'OpenCV'],
-      link: 'https://github.com/your-username/project-2',
+      title: 'E-commerce App for ASUS',
+      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
+      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
       demo: null
     },
     {
-      title: 'Project Name 3',
-      description: 'Description of a third project showcasing different aspects of your expertise.',
-      tech: ['Vue.js', 'Express', 'PostgreSQL'],
-      link: 'https://github.com/your-username/project-3',
-      demo: 'https://your-demo-link-3.com'
+      title: 'Full Stack IoT Application',
+      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
+      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
+      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P'
     }
   ];
 
@@ -1065,7 +1158,7 @@ function ProjectsPage({ playSound, clickSoundRef }) {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
@@ -1143,7 +1236,19 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   return (
     <div className="min-h-screen px-6 py-24 flex items-center justify-center">
       {showButterflies && <MultipleButterflies />}
@@ -1151,7 +1256,7 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
       <div className="max-w-3xl w-full">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
@@ -1178,7 +1283,7 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
               onClick={() => playSound(clickSoundRef)}
               className="text-red-400 hover:text-red-300 text-lg transition-colors"
             >
-              abdullahnasirchowdhury1@gmail.com
+              Click to Email Me
             </a>
           </div>
         </div>
