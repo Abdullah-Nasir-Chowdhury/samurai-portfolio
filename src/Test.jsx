@@ -511,6 +511,38 @@ const playSound = async (soundRef) => {
         .butterfly-wing-right {
           animation: butterflyWingRight 0.3s ease-in-out infinite;
         }
+        
+        @keyframes shimmer {
+        0% {
+            background-position: -200% center;
+        }
+        100% {
+            background-position: 200% center;
+        }
+        }
+
+        .kanji-shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 255, 255, 0.9) 40%,
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, 0.9) 60%,
+            rgba(255, 255, 255, 0.9) 100%
+        );
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 2s ease-in-out infinite;
+        animation-iteration-count: 1;
+        animation-delay: 0s;
+        }
+
+        .kanji-shimmer-loop {
+        animation: shimmer 2s ease-in-out;
+        animation-delay: 0s;
+        }
       `}</style>
     </div>
   );
@@ -694,6 +726,21 @@ function HomePage({ playSound, clickSoundRef }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Kanji Shimmer Effect Loop
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
+
+  return () => clearInterval(shimmerInterval);
+ }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies />}
@@ -753,7 +800,7 @@ function HomePage({ playSound, clickSoundRef }) {
                 key={i}
                 className="absolute top-1/2 left-1/2"
                 style={{
-                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-180px)`,
+                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-172px)`,
                 }}
               >
                 <Flame 
@@ -809,12 +856,12 @@ function HomePage({ playSound, clickSoundRef }) {
           transitionDelay: '700ms'
         }}
       >
-        <h1 className="text-6xl md:text-7xl font-bold mb-4 text-red-50"
-            style={{ 
-              fontFamily: '"Cinzel", serif',
-              textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(0, 0, 0, 0.8)'
-            }}>
-          蝶踊り
+        <h1 className="kanji-title text-6xl md:text-7xl font-bold mb-4 text-red-50"
+        style={{ 
+            fontFamily: '"Cinzel", serif',
+            textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(0, 0, 0, 0.8)'
+        }}>
+            蝶踊り
         </h1>
         <div className="flex items-center justify-center gap-4 text-red-400">
           <div className="h-px w-12 bg-red-600" />
@@ -904,7 +951,19 @@ function ResearchPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   const publications = [
     {
       title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
@@ -948,7 +1007,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
@@ -1033,7 +1092,19 @@ function ProjectsPage({ playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   const projects = [
     {
       title: 'Project Name 1',
@@ -1065,7 +1136,7 @@ function ProjectsPage({ playSound, clickSoundRef }) {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
@@ -1143,7 +1214,19 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
     const timer = setTimeout(() => setShowButterflies(false), 12000);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+  const shimmerInterval = setInterval(() => {
+    const kanjiElement = document.querySelector('.kanji-title');
+    if (kanjiElement) {
+      kanjiElement.classList.add('kanji-shimmer-loop');
+      setTimeout(() => {
+        kanjiElement.classList.remove('kanji-shimmer-loop');
+      }, 2000);
+    }
+  }, 10000);
 
+  return () => clearInterval(shimmerInterval);
+ }, []);
   return (
     <div className="min-h-screen px-6 py-24 flex items-center justify-center">
       {showButterflies && <MultipleButterflies />}
@@ -1151,7 +1234,7 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
       <div className="max-w-3xl w-full">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-red-50"
+          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
               style={{ 
                 fontFamily: '"Cinzel", serif',
                 textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'

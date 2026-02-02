@@ -1,20 +1,133 @@
-import React, { useState, useEffect } from 'react';
-import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX } from 'lucide-react';
 
 export default function SamuraiPortfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  
+// Audio refs
+const bgMusicRef = useRef(null);
+const clickSoundRef = useRef(null);
+const pageSwitchSoundRef = useRef(null);
+const [audioInitialized, setAudioInitialized] = useState(false);
 
-  useEffect(() => {
-    setIsLoaded(true);
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+useEffect(() => {
+  setIsLoaded(true);
+  const handleMouseMove = (e) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+  window.addEventListener('mousemove', handleMouseMove);
+  return () => window.removeEventListener('mousemove', handleMouseMove);
+}, []);
+
+// Initialize audio
+useEffect(() => {
+  const initAudio = () => {
+    try {
+      // Use absolute paths from public folder - this works on Vercel
+      // Files should be placed in: public/audio/moonlight.mp3 and public/audio/a6.mp3
+      
+      // Background Music
+      bgMusicRef.current = new Audio('/audio/moonlight.mp3');
+      bgMusicRef.current.loop = true;
+      bgMusicRef.current.volume = 0.2;
+      
+      // Add error handlers
+      bgMusicRef.current.addEventListener('error', (e) => {
+        console.error('Background music failed to load. Make sure moonlight.mp3 exists in public/audio/', e);
+      });
+      
+      bgMusicRef.current.addEventListener('canplaythrough', () => {
+        console.log('Background music loaded successfully');
+        setAudioInitialized(true);
+      });
+
+      // Click Sound
+      clickSoundRef.current = new Audio('/audio/a6.mp3');
+      clickSoundRef.current.volume = 1.0;
+      clickSoundRef.current.addEventListener('error', (e) => {
+        console.error('Click sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
+      });
+
+      // Page Switch Sound
+      pageSwitchSoundRef.current = new Audio('/audio/a6.mp3');
+      pageSwitchSoundRef.current.volume = 1.0;
+      pageSwitchSoundRef.current.addEventListener('error', (e) => {
+        console.error('Page switch sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
+      });
+      
+      // Preload audio
+      bgMusicRef.current.load();
+      clickSoundRef.current.load();
+      pageSwitchSoundRef.current.load();
+      
+    } catch (error) {
+      console.error('Audio initialization failed:', error);
+    }
+  };
+
+  initAudio();
+
+  return () => {
+    // Cleanup
+    if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+      bgMusicRef.current.src = '';
+      bgMusicRef.current = null;
+    }
+    if (clickSoundRef.current) {
+      clickSoundRef.current.src = '';
+      clickSoundRef.current = null;
+    }
+    if (pageSwitchSoundRef.current) {
+      pageSwitchSoundRef.current.src = '';
+      pageSwitchSoundRef.current = null;
+    }
+  };
+}, []);
+
+// Toggle all audio (music and sound effects)
+const toggleAudio = async () => {
+  if (isMusicPlaying || !isMuted) {
+    // Turn everything off
+    if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+    }
+    setIsMusicPlaying(false);
+    setIsMuted(true);
+  } else {
+    // Turn everything on
+    if (bgMusicRef.current) {
+      try {
+        await bgMusicRef.current.play();
+        setIsMusicPlaying(true);
+        setIsMuted(false);
+      } catch (error) {
+        console.error('Audio play failed:', error);
+        // Show user-friendly error
+        alert('Unable to play audio. Please make sure:\n1. Audio files exist in public/audio/ folder\n2. You have interacted with the page (browsers require user interaction for audio)');
+      }
+    }
+  }
+};
+
+// Play sound effect
+const playSound = async (soundRef) => {
+  if (!isMuted && soundRef.current) {
+    try {
+      // Clone the audio for overlapping sounds
+      const sound = soundRef.current.cloneNode();
+      sound.volume = soundRef.current.volume;
+      await sound.play();
+    } catch (error) {
+      console.error('Sound play failed:', error);
+    }
+  }
+};
 
   const socialLinks = [
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/anc19990/', color: 'hover:text-blue-400' },
@@ -33,22 +146,28 @@ export default function SamuraiPortfolio() {
   ];
 
   const navigateTo = (page) => {
+    playSound(pageSwitchSoundRef);
     setCurrentPage(page);
     setMenuOpen(false);
+  };
+
+  const handleMenuToggle = () => {
+    playSound(clickSoundRef);
+    setMenuOpen(!menuOpen);
   };
 
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
-        return <HomePage />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} />;
       case 'research':
-        return <ResearchPage />;
+        return <ResearchPage playSound={playSound} clickSoundRef={clickSoundRef} />;
       case 'projects':
-        return <ProjectsPage />;
+        return <ProjectsPage playSound={playSound} clickSoundRef={clickSoundRef} />;
       case 'contact':
-        return <ContactPage socialLinks={socialLinks} />;
+        return <ContactPage socialLinks={socialLinks} playSound={playSound} clickSoundRef={clickSoundRef} />;
       default:
-        return <HomePage />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} />;
     }
   };
 
@@ -95,9 +214,25 @@ export default function SamuraiPortfolio() {
         </div>
       </div>
 
+      {/* Single Audio Control - NO SOUND ON CLICK */}
+      <div className="fixed top-6 left-6 z-50">
+        <button
+          onClick={toggleAudio}
+          className="p-3 bg-red-900/80 backdrop-blur-sm border-2 border-red-600 rounded-lg hover:bg-red-800 transition-all duration-300"
+          style={{ boxShadow: '0 0 20px rgba(220, 38, 38, 0.3)' }}
+          title={isMusicPlaying && !isMuted ? "Mute All Audio" : "Unmute All Audio"}
+        >
+          {isMusicPlaying && !isMuted ? (
+            <Volume2 className="text-red-200" size={24} />
+          ) : (
+            <VolumeX className="text-red-200" size={24} />
+          )}
+        </button>
+      </div>
+
       {/* Hamburger Menu Button */}
       <button
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={handleMenuToggle}
         className="fixed top-6 right-6 z-50 p-3 bg-red-900/80 backdrop-blur-sm border-2 border-red-600 rounded-lg hover:bg-red-800 transition-all duration-300"
         style={{ boxShadow: '0 0 20px rgba(220, 38, 38, 0.3)' }}
       >
@@ -146,6 +281,7 @@ export default function SamuraiPortfolio() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => playSound(clickSoundRef)}
                   className={`flex items-center justify-center p-3 rounded-lg bg-red-950/50 border border-red-900 text-red-300 ${social.color} transition-all duration-300 hover:scale-110`}
                   aria-label={social.name}
                 >
@@ -379,7 +515,7 @@ export default function SamuraiPortfolio() {
     </div>
   );
 }
-// Cursor Component - Replace your existing CustomCursor with this
+// Cursor Component
 function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
@@ -425,14 +561,13 @@ function CustomCursor() {
         />
       </div>
 
-      {/* Outer halo - NO transition on position */}
+      {/* Outer halo */}
       <div
         className="fixed pointer-events-none z-50"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           transform: 'translate(-50%, -50%)',
-          // Removed transition from here
         }}
       >
         <div
@@ -544,7 +679,7 @@ function MultipleButterflies() {
 }
 
 // Home Page Component
-function HomePage() {
+function HomePage({ playSound, clickSoundRef }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
 
@@ -552,7 +687,6 @@ function HomePage() {
     setIsLoaded(true);
     setShowButterflies(true);
     
-    // Reset butterflies after animation completes
     const timer = setTimeout(() => {
       setShowButterflies(false);
     }, 12000);
@@ -762,7 +896,7 @@ function HomePage() {
 }
 
 // Research Page Component
-function ResearchPage() {
+function ResearchPage({ playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -833,7 +967,10 @@ function ResearchPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {['Computer Vision', 'Deep Learning', 'Image Processing', 'Pattern Recognition'].map((interest, i) => (
-              <div key={i} className="p-4 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm">
+              <div 
+                key={i} 
+                className="p-4 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm"
+              >
                 <p className="text-red-200" style={{ fontFamily: '"Rajdhani", sans-serif' }}>{interest}</p>
               </div>
             ))}
@@ -872,6 +1009,7 @@ function ResearchPage() {
                   href={pub.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => playSound(clickSoundRef)}
                   className="inline-block px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                   style={{ fontFamily: '"Rajdhani", sans-serif' }}
                 >
@@ -887,7 +1025,7 @@ function ResearchPage() {
 }
 
 // Projects Page Component
-function ProjectsPage() {
+function ProjectsPage({ playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -969,6 +1107,7 @@ function ProjectsPage() {
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => playSound(clickSoundRef)}
                   className="flex-1 px-4 py-2 bg-red-600 text-white text-center rounded hover:bg-red-700 transition-colors text-sm"
                   style={{ fontFamily: '"Rajdhani", sans-serif' }}
                 >
@@ -979,6 +1118,7 @@ function ProjectsPage() {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => playSound(clickSoundRef)}
                     className="flex-1 px-4 py-2 border border-red-600 text-red-400 text-center rounded hover:bg-red-600 hover:text-white transition-all text-sm"
                     style={{ fontFamily: '"Rajdhani", sans-serif' }}
                   >
@@ -995,7 +1135,7 @@ function ProjectsPage() {
 }
 
 // Contact Page Component
-function ContactPage({ socialLinks }) {
+function ContactPage({ socialLinks, playSound, clickSoundRef }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -1025,14 +1165,17 @@ function ContactPage({ socialLinks }) {
 
         {/* Contact Info */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
-          <div className="p-8 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm text-center"
-               style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}>
+          <div 
+            className="p-8 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm text-center"
+            style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+          >
             <Mail className="text-red-400 mx-auto mb-4" size={48} />
             <h2 className="text-2xl font-bold text-red-200 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
               EMAIL
             </h2>
             <a 
               href="mailto:abdullahnasirchowdhury1@gmail.com"
+              onClick={() => playSound(clickSoundRef)}
               className="text-red-400 hover:text-red-300 text-lg transition-colors"
             >
               abdullahnasirchowdhury1@gmail.com
@@ -1052,6 +1195,7 @@ function ContactPage({ socialLinks }) {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => playSound(clickSoundRef)}
                 className="p-6 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 transition-all duration-300 hover:scale-105 flex flex-col items-center gap-3"
                 style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
               >
