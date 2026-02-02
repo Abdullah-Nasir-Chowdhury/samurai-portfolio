@@ -520,11 +520,9 @@ function HomePage() {
             {[...Array(12)].map((_, i) => (
               <div
                 key={i}
-                className="absolute"
+                className="absolute top-1/2 left-1/2"
                 style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 30}deg) translateY(-160px) translateX(-16px)`,
+                  transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-160px)`,
                 }}
               >
                 <Flame 
@@ -544,11 +542,9 @@ function HomePage() {
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
-                className="absolute"
+                className="absolute top-1/2 left-1/2"
                 style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 45}deg) translateY(-145px) translateX(-12px)`,
+                  transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-145px)`,
                 }}
               >
                 <Flame 
