@@ -34,7 +34,7 @@ useEffect(() => {
       // Background Music
       bgMusicRef.current = new Audio('/audio/moonlight.mp3');
       bgMusicRef.current.loop = true;
-      bgMusicRef.current.volume = 0.3;
+      bgMusicRef.current.volume = 0.2;
       
       // Add error handlers
       bgMusicRef.current.addEventListener('error', (e) => {
@@ -48,14 +48,14 @@ useEffect(() => {
 
       // Click Sound
       clickSoundRef.current = new Audio('/audio/a6.mp3');
-      clickSoundRef.current.volume = 0.7;
+      clickSoundRef.current.volume = 1.0;
       clickSoundRef.current.addEventListener('error', (e) => {
         console.error('Click sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
 
       // Page Switch Sound
       pageSwitchSoundRef.current = new Audio('/audio/a6.mp3');
-      pageSwitchSoundRef.current.volume = 0.7;
+      pageSwitchSoundRef.current.volume = 1.0;
       pageSwitchSoundRef.current.addEventListener('error', (e) => {
         console.error('Page switch sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
