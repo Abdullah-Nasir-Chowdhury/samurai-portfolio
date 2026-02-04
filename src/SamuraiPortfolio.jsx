@@ -8,12 +8,101 @@ export default function SamuraiPortfolio() {
   const [currentPage, setCurrentPage] = useState('home');
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [theme, setTheme] = useState('red'); // 'red', 'blue', or 'black'
+  const [profileImage, setProfileImage] = useState('/16041.jpg'); // NEW: State for profile image
   
 // Audio refs
 const bgMusicRef = useRef(null);
 const clickSoundRef = useRef(null);
 const pageSwitchSoundRef = useRef(null);
 const [audioInitialized, setAudioInitialized] = useState(false);
+
+// Theme configuration
+const themeConfig = {
+  red: {
+    primary: '#dc2626',
+    light: '#fecaca',
+    lighter: '#fca5a5',
+    medium: '#dc2626',
+    dark: '#991b1b',
+    darker: '#7f1d1d',
+    darkest: '#450a0a',
+    accent: '#f97316',
+    accentDark: '#f97316',
+    shadowColor: 'rgba(220, 38, 38, 0.5)',
+    particleColor: '#ef4444',
+    kanjiColor: '#7f1d1d',
+    cursorColor: '#ef4444',
+    borderColor: '#7f1d1d',
+    borderMediumColor: '#991b1b',
+    borderLightColor: '#dc2626',
+    bgColor: '#7f1d1d',
+    bgMediumColor: '#450a0a',
+    bgLightColor: '#991b1b',
+    textColor: '#f87171',
+    textLightColor: '#fecaca',
+    textLighterColor: '#fef2f2',
+    bgGlassLight: 'rgba(127, 29, 29, 0.8)',
+    bgGlassDark: 'rgba(69, 10, 10, 0.5)',
+    rgbaColor: 'rgba(220, 38, 38, ',
+  },
+  blue: {
+    primary: '#1e3a8a',
+    light: '#bfdbfe',
+    lighter: '#93c5fd',
+    medium: '#2563eb',
+    dark: '#1e3a8a',
+    darker: '#1e40af',
+    darkest: '#172554',
+    accent: '#22d3ee',
+    accentDark: '#06b6d4',
+    shadowColor: 'rgba(30, 58, 138, 0.5)',
+    particleColor: '#3b82f6',
+    kanjiColor: '#1e40af',
+    cursorColor: '#3b82f6',
+    borderColor: '#1e40af',
+    borderMediumColor: '#1e3a8a',
+    borderLightColor: '#2563eb',
+    bgColor: '#1e40af',
+    bgMediumColor: '#172554',
+    bgLightColor: '#1e3a8a',
+    textColor: '#60a5fa',
+    textLightColor: '#bfdbfe',
+    textLighterColor: '#eff6ff',
+    bgGlassLight: 'rgba(30, 64, 175, 0.8)',
+    bgGlassDark: 'rgba(23, 37, 84, 0.5)',
+    rgbaColor: 'rgba(30, 58, 138, ',
+  },
+  black: {
+    primary: '#ffffff',
+    light: '#d1d5db',
+    lighter: '#9ca3af',
+    medium: '#6b7280',
+    dark: '#374151',
+    darker: '#1f2937',
+    darkest: '#111827',
+    accent: '#a78bfa',
+    accentDark: '#8b5cf6',
+    shadowColor: 'rgba(139, 92, 246, 0.5)',
+    particleColor: '#a78bfa',
+    kanjiColor: '#374151',
+    cursorColor: '#a78bfa',
+    borderColor: '#374151',
+    borderMediumColor: '#4b5563',
+    borderLightColor: '#6b7280',
+    bgColor: '#374151',
+    bgMediumColor: '#111827',
+    bgLightColor: '#4b5563',
+    textColor: '#9ca3af',
+    textLightColor: '#d1d5db',
+    textLighterColor: '#f3f4f6',
+    bgGlassLight: 'rgba(55, 65, 81, 0.8)',
+    bgGlassDark: 'rgba(17, 24, 39, 0.5)',
+    rgbaColor: 'rgba(107, 114, 128, ',
+  }
+};
+
+const colors = themeConfig[theme];
 
 useEffect(() => {
   setIsLoaded(true);
@@ -159,27 +248,27 @@ const playSound = async (soundRef) => {
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
       case 'research':
-        return <ResearchPage playSound={playSound} clickSoundRef={clickSoundRef} />;
+        return <ResearchPage playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       case 'projects':
-        return <ProjectsPage playSound={playSound} clickSoundRef={clickSoundRef} />;
+        return <ProjectsPage playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       case 'contact':
-        return <ContactPage socialLinks={socialLinks} playSound={playSound} clickSoundRef={clickSoundRef} />;
+        return <ContactPage socialLinks={socialLinks} playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       default:
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
     }
   };
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
-      <CustomCursor />
+      <CustomCursor colors={colors} />
       {/* Japanese Pattern Background */}
       <div 
         className="absolute inset-0 opacity-10"
         style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(220, 38, 38, 0.1) 35px, rgba(220, 38, 38, 0.1) 70px),
-                           repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(220, 38, 38, 0.1) 35px, rgba(220, 38, 38, 0.1) 70px)`
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, ${colors.rgbaColor}0.1) 35px, ${colors.rgbaColor}0.1) 70px),
+                           repeating-linear-gradient(-45deg, transparent, transparent 35px, ${colors.rgbaColor}0.1) 35px, ${colors.rgbaColor}0.1) 70px)`
         }}
       />
 
@@ -188,8 +277,9 @@ const playSound = async (soundRef) => {
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-red-500 rounded-full opacity-20"
+            className="absolute w-1 h-1 rounded-full opacity-20"
             style={{
+              backgroundColor: colors.particleColor,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animation: `float ${10 + Math.random() * 20}s infinite ease-in-out`,
@@ -206,10 +296,16 @@ const playSound = async (soundRef) => {
           transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`
         }}
       >
-        <div className="absolute top-20 right-20 text-red-900 opacity-5 select-none" style={{ fontSize: '12rem', fontWeight: 'bold' }}>
+        <div 
+          className="absolute top-20 right-20 opacity-5 select-none" 
+          style={{ fontSize: '12rem', fontWeight: 'bold', color: colors.kanjiColor }}
+        >
           侍
         </div>
-        <div className="absolute bottom-20 left-20 text-red-900 opacity-5 select-none" style={{ fontSize: '12rem', fontWeight: 'bold' }}>
+        <div 
+          className="absolute bottom-20 left-20 opacity-5 select-none" 
+          style={{ fontSize: '12rem', fontWeight: 'bold', color: colors.kanjiColor }}
+        >
           武
         </div>
       </div>
@@ -218,14 +314,18 @@ const playSound = async (soundRef) => {
       <div className="fixed top-6 left-6 z-50">
         <button
           onClick={toggleAudio}
-          className="p-3 bg-red-900/80 backdrop-blur-sm border-2 border-red-600 rounded-lg hover:bg-red-800 transition-all duration-300"
-          style={{ boxShadow: '0 0 20px rgba(220, 38, 38, 0.3)' }}
+          className="p-3 backdrop-blur-sm border-2 rounded-lg transition-all duration-300"
+          style={{ 
+            backgroundColor: colors.bgGlassLight,
+            borderColor: colors.borderLightColor,
+            boxShadow: `0 0 20px ${colors.shadowColor}` 
+          }}
           title={isMusicPlaying && !isMuted ? "Mute All Audio" : "Unmute All Audio"}
         >
           {isMusicPlaying && !isMuted ? (
-            <Volume2 className="text-red-200" size={24} />
+            <Volume2 style={{ color: colors.textLightColor }} size={24} />
           ) : (
-            <VolumeX className="text-red-200" size={24} />
+            <VolumeX style={{ color: colors.textLightColor }} size={24} />
           )}
         </button>
       </div>
@@ -233,18 +333,29 @@ const playSound = async (soundRef) => {
       {/* Hamburger Menu Button */}
       <button
         onClick={handleMenuToggle}
-        className="fixed top-6 right-6 z-50 p-3 bg-red-900/80 backdrop-blur-sm border-2 border-red-600 rounded-lg hover:bg-red-800 transition-all duration-300"
-        style={{ boxShadow: '0 0 20px rgba(220, 38, 38, 0.3)' }}
+        className="fixed top-6 right-6 z-50 p-3 backdrop-blur-sm border-2 rounded-lg transition-all duration-300"
+        style={{
+          backgroundColor: colors.bgGlassLight,
+          borderColor: colors.borderLightColor,
+          boxShadow: `0 0 20px ${colors.shadowColor}`
+        }}
       >
-        {menuOpen ? <X className="text-red-200" size={28} /> : <Menu className="text-red-200" size={28} />}
+        {menuOpen ? (
+          <X style={{ color: colors.textLightColor }} size={28} />
+        ) : (
+          <Menu style={{ color: colors.textLightColor }} size={28} />
+        )}
       </button>
 
       {/* Side Navigation Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-black/95 backdrop-blur-lg border-l-2 border-red-900 z-40 transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-80 bg-black/95 backdrop-blur-lg z-40 transition-transform duration-300 ${
           menuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
-        style={{ boxShadow: '-10px 0 50px rgba(220, 38, 38, 0.2)' }}
+        style={{ 
+          boxShadow: `-10px 0 50px ${colors.shadowColor}`,
+          borderLeft: `1px solid ${colors.borderColor}`
+        }}
       >
         <div className="flex flex-col h-full p-8 pt-24">
           {/* Navigation Links */}
@@ -254,12 +365,13 @@ const playSound = async (soundRef) => {
                 <li key={item.id}>
                   <button
                     onClick={() => navigateTo(item.id)}
-                    className={`w-full flex items-center gap-4 px-6 py-4 rounded-lg transition-all duration-300 ${
-                      currentPage === item.id
-                        ? 'bg-red-600 text-white'
-                        : 'text-red-200 hover:bg-red-900/50 hover:text-white'
-                    }`}
-                    style={{ fontFamily: '"Rajdhani", sans-serif', letterSpacing: '1px' }}
+                    className="w-full flex items-center gap-4 px-6 py-4 rounded-lg transition-all duration-300"
+                    style={{
+                      fontFamily: '"Rajdhani", sans-serif',
+                      letterSpacing: '1px',
+                      backgroundColor: currentPage === item.id ? colors.bgColor : 'transparent',
+                      color: currentPage === item.id ? 'white' : colors.textLightColor
+                    }}
                   >
                     <item.icon size={24} />
                     <span className="text-lg font-semibold">{item.name}</span>
@@ -270,8 +382,11 @@ const playSound = async (soundRef) => {
           </nav>
 
           {/* Social Links */}
-          <div className="border-t border-red-900 pt-6">
-            <p className="text-red-400 text-sm mb-4 tracking-wide" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <div style={{ borderTop: `1px solid ${colors.borderColor}`, paddingTop: '1.5rem' }}>
+            <p 
+              className="text-sm mb-4 tracking-wide" 
+              style={{ fontFamily: '"Rajdhani", sans-serif', color: colors.textColor }}
+            >
               CONNECT WITH ME
             </p>
             <div className="grid grid-cols-3 gap-4">
@@ -282,7 +397,13 @@ const playSound = async (soundRef) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => playSound(clickSoundRef)}
-                  className={`flex items-center justify-center p-3 rounded-lg bg-red-950/50 border border-red-900 text-red-300 ${social.color} transition-all duration-300 hover:scale-110`}
+                  className={`flex items-center justify-center p-3 rounded-lg transition-all duration-300 hover:scale-110 ${social.color}`}
+                  style={{
+                    backgroundColor: colors.bgMediumColor,
+                    borderColor: colors.borderColor,
+                    color: colors.textColor,
+                    border: `1px solid ${colors.borderColor}`
+                  }}
                   aria-label={social.name}
                 >
                   <social.icon size={20} />
@@ -553,7 +674,7 @@ const playSound = async (soundRef) => {
   );
 }
 // Cursor Component
-function CustomCursor() {
+function CustomCursor({ colors }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -606,11 +727,12 @@ function CustomCursor() {
         }}
       >
         <div
-          className={`bg-red-500 rounded-full transition-all duration-150 ${
-            isPointer ? 'w-3 h-3' : 'w-2 h-2'
-          }`}
+          className="rounded-full transition-all duration-150"
           style={{
-            boxShadow: '0 0 10px rgba(220, 38, 38, 1)',
+            backgroundColor: colors.cursorColor,
+            width: isPointer ? '12px' : '8px',
+            height: isPointer ? '12px' : '8px',
+            boxShadow: `0 0 10px ${colors.cursorColor}`,
           }}
         />
       </div>
@@ -625,15 +747,15 @@ function CustomCursor() {
         }}
       >
         <div
-          className={`rounded-full border-2 transition-all duration-300 ${
-            isPointer
-              ? 'w-12 h-12 border-red-400 bg-red-500/10'
-              : 'w-10 h-10 border-red-500 bg-red-500/5'
-          }`}
+          className="rounded-full transition-all duration-300"
           style={{
+            width: isPointer ? '48px' : '40px',
+            height: isPointer ? '48px' : '40px',
+            border: `2px solid ${colors.cursorColor}`,
+            backgroundColor: isPointer ? `${colors.rgbaColor}0.1)` : `${colors.rgbaColor}0.05)`,
             boxShadow: isPointer
-              ? '0 0 30px rgba(220, 38, 38, 0.6), inset 0 0 20px rgba(220, 38, 38, 0.2)'
-              : '0 0 20px rgba(220, 38, 38, 0.4), inset 0 0 15px rgba(220, 38, 38, 0.1)',
+              ? `0 0 30px ${colors.shadowColor}, inset 0 0 20px ${colors.rgbaColor}0.2)`
+              : `0 0 20px ${colors.shadowColor}, inset 0 0 15px ${colors.rgbaColor}0.1)`,
           }}
         />
       </div>
@@ -642,7 +764,44 @@ function CustomCursor() {
 }
 
 // Butterfly Component
-function FlyingButterfly({ animationClass, delay = 0 }) {
+function FlyingButterfly({ animationClass, delay = 0, colors }) {
+  const getButterflyGradient = () => {
+    if (colors.primary === '#dc2626') {
+      return {
+        wingGradient: 'url(#leftWingGradient)',
+        wingColor1: '#dc2626',
+        wingColor2: '#991b1b',
+        wingColor3: '#7f1d1d',
+        bodyColor: 'from-red-800 to-red-950',
+        bodyGradient: 'rgba(220, 38, 38, 0.6)',
+        dotColor: '#450a0a'
+      };
+    } else if (colors.primary === '#1e3a8a') {
+      return {
+        wingGradient: 'url(#leftWingGradient)',
+        wingColor1: '#0369a1',
+        wingColor2: '#075985',
+        wingColor3: '#0c4a6e',
+        bodyColor: 'from-blue-800 to-blue-950',
+        bodyGradient: 'rgba(30, 58, 138, 0.6)',
+        dotColor: '#082f49'
+      };
+    } else {
+      // Black theme
+      return {
+        wingGradient: 'url(#leftWingGradient)',
+        wingColor1: '#9ca3af',
+        wingColor2: '#6b7280',
+        wingColor3: '#4b5563',
+        bodyColor: 'from-gray-700 to-gray-900',
+        bodyGradient: 'rgba(107, 114, 128, 0.6)',
+        dotColor: '#1f2937'
+      };
+    }
+  };
+
+  const gradient = getButterflyGradient();
+
   return (
     <div 
       className={`${animationClass} fixed pointer-events-none z-30`} 
@@ -654,24 +813,29 @@ function FlyingButterfly({ animationClass, delay = 0 }) {
     >
       <div className="relative" style={{ width: '30px', height: '30px' }}>
         {/* Butterfly Body */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-4 bg-gradient-to-b from-red-800 to-red-950 rounded-full z-10" 
-             style={{ boxShadow: '0 0 4px rgba(220, 38, 38, 0.6)' }} />
+        <div 
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full z-10"
+          style={{
+            background: `linear-gradient(to bottom, ${colors.dark}, ${colors.darkest})`,
+            boxShadow: `0 0 4px ${gradient.bodyGradient}`
+          }}
+        />
         
         {/* Left Wing */}
         <div className="butterfly-wing-left absolute left-0 top-1/2 -translate-y-1/2 origin-right">
           <svg width="15" height="20" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M28 20C28 28 22 38 15 38C8 38 5 30 5 20C5 10 8 2 15 2C22 2 28 12 28 20Z" 
-                  fill="url(#leftWingGradient)" 
-                  stroke="#7f1d1d" 
+                  fill={gradient.wingGradient} 
+                  stroke={gradient.wingColor3} 
                   strokeWidth="1"
                   filter="url(#glow)" />
-            <circle cx="18" cy="15" r="3" fill="#450a0a" opacity="0.6" />
-            <circle cx="20" cy="25" r="2" fill="#450a0a" opacity="0.4" />
+            <circle cx="18" cy="15" r="3" fill={gradient.dotColor} opacity="0.6" />
+            <circle cx="20" cy="25" r="2" fill={gradient.dotColor} opacity="0.4" />
             <defs>
               <linearGradient id="leftWingGradient" x1="5" y1="2" x2="28" y2="38">
-                <stop offset="0%" stopColor="#dc2626" />
-                <stop offset="50%" stopColor="#991b1b" />
-                <stop offset="100%" stopColor="#7f1d1d" />
+                <stop offset="0%" stopColor={gradient.wingColor1} />
+                <stop offset="50%" stopColor={gradient.wingColor2} />
+                <stop offset="100%" stopColor={gradient.wingColor3} />
               </linearGradient>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -688,17 +852,17 @@ function FlyingButterfly({ animationClass, delay = 0 }) {
         <div className="butterfly-wing-right absolute right-0 top-1/2 -translate-y-1/2 origin-left">
           <svg width="15" height="20" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 20C2 28 8 38 15 38C22 38 25 30 25 20C25 10 22 2 15 2C8 2 2 12 2 20Z" 
-                  fill="url(#rightWingGradient)" 
-                  stroke="#7f1d1d" 
+                  fill={gradient.wingGradient} 
+                  stroke={gradient.wingColor3} 
                   strokeWidth="1"
                   filter="url(#glow2)" />
-            <circle cx="12" cy="15" r="3" fill="#450a0a" opacity="0.6" />
-            <circle cx="10" cy="25" r="2" fill="#450a0a" opacity="0.4" />
+            <circle cx="12" cy="15" r="3" fill={gradient.dotColor} opacity="0.6" />
+            <circle cx="10" cy="25" r="2" fill={gradient.dotColor} opacity="0.4" />
             <defs>
               <linearGradient id="rightWingGradient" x1="25" y1="2" x2="2" y2="38">
-                <stop offset="0%" stopColor="#dc2626" />
-                <stop offset="50%" stopColor="#991b1b" />
-                <stop offset="100%" stopColor="#7f1d1d" />
+                <stop offset="0%" stopColor={gradient.wingColor1} />
+                <stop offset="50%" stopColor={gradient.wingColor2} />
+                <stop offset="100%" stopColor={gradient.wingColor3} />
               </linearGradient>
               <filter id="glow2">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -712,28 +876,40 @@ function FlyingButterfly({ animationClass, delay = 0 }) {
         </div>
 
         {/* Antennae */}
-        <div className="absolute left-1/2 top-0 -translate-x-1 w-0.5 h-1.5 bg-red-900 rounded-full origin-bottom" style={{ transform: 'translateX(-1px) rotate(-20deg)' }} />
-        <div className="absolute left-1/2 top-0 translate-x-0.5 w-0.5 h-1.5 bg-red-900 rounded-full origin-bottom" style={{ transform: 'translateX(1px) rotate(20deg)' }} />
+        <div 
+          className="absolute left-1/2 top-0 -translate-x-1 w-0.5 h-1.5 rounded-full origin-bottom"
+          style={{ 
+            backgroundColor: colors.darker,
+            transform: 'translateX(-1px) rotate(-20deg)' 
+          }} 
+        />
+        <div 
+          className="absolute left-1/2 top-0 translate-x-0.5 w-0.5 h-1.5 rounded-full origin-bottom"
+          style={{ 
+            backgroundColor: colors.darker,
+            transform: 'translateX(1px) rotate(20deg)' 
+          }} 
+        />
       </div>
     </div>
   );
 }
 
 // Multiple Butterflies Component
-function MultipleButterflies() {
+function MultipleButterflies({ colors }) {
   return (
     <>
-      <FlyingButterfly animationClass="butterfly-container-1" delay={0} />
-      <FlyingButterfly animationClass="butterfly-container-2" delay={1.5} />
-      <FlyingButterfly animationClass="butterfly-container-3" delay={3} />
-      <FlyingButterfly animationClass="butterfly-container-4" delay={4.5} />
-      <FlyingButterfly animationClass="butterfly-container-5" delay={6} />
+      <FlyingButterfly animationClass="butterfly-container-1" delay={0} colors={colors} />
+      <FlyingButterfly animationClass="butterfly-container-2" delay={1.5} colors={colors} />
+      <FlyingButterfly animationClass="butterfly-container-3" delay={3} colors={colors} />
+      <FlyingButterfly animationClass="butterfly-container-4" delay={4.5} colors={colors} />
+      <FlyingButterfly animationClass="butterfly-container-5" delay={6} colors={colors} />
     </>
   );
 }
 
 // Home Page Component
-function HomePage({ playSound, clickSoundRef }) {
+function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
 
@@ -763,9 +939,28 @@ function HomePage({ playSound, clickSoundRef }) {
   return () => clearInterval(shimmerInterval);
  }, []);
 
+ const handleThemeChange = () => {
+   playSound(clickSoundRef);
+   setTheme(prevTheme => {
+     if (prevTheme === 'red') return 'blue';
+     if (prevTheme === 'blue') return 'black';
+     return 'red';
+   });
+ };
+
+ // NEW: Handle image change when clicking backend card
+ const handleImageChange = () => {
+   playSound(clickSoundRef);
+   // Replace '/new-image.jpg' with the path to your desired image
+   // You can also cycle through multiple images if you want
+   setProfileImage(prevImage => 
+     prevImage === '/16041.jpg' ? '/doflamingo.png' : '/16041.jpg'
+   );
+ };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
-      {showButterflies && <MultipleButterflies />}
+      {showButterflies && <MultipleButterflies colors={colors} />}
       
       {/* Decorative Top Line */}
       <div 
@@ -775,9 +970,14 @@ function HomePage({ playSound, clickSoundRef }) {
           transform: isLoaded ? 'translateY(0)' : 'translateY(-40px)'
         }}
       >
-        <div className="h-px bg-gradient-to-r from-transparent via-red-600 to-transparent" />
+        <div 
+          className="h-px"
+          style={{
+            background: `linear-gradient(to right, transparent, ${colors.medium}, transparent)`
+          }}
+        />
         <div className="flex justify-center -mt-3">
-          <Sword className="text-red-600" size={24} />
+          <Sword style={{ color: colors.medium }} size={24} />
         </div>
       </div>
 
@@ -790,7 +990,13 @@ function HomePage({ playSound, clickSoundRef }) {
           transitionDelay: '300ms'
         }}
       >
-        <div className="absolute inset-0 blur-3xl bg-red-600 opacity-30 rounded-full" style={{ transform: 'scale(1.1)' }} />
+        <div 
+          className="absolute inset-0 blur-3xl rounded-full opacity-30" 
+          style={{ 
+            backgroundColor: colors.medium,
+            transform: 'scale(1.1)' 
+          }} 
+        />
         
         <div className="relative w-80 h-80 flex items-center justify-center">
           {/* Outer Flame Ring */}
@@ -804,12 +1010,13 @@ function HomePage({ playSound, clickSoundRef }) {
                 }}
               >
                 <Flame 
-                  className="text-red-600 opacity-70"
-                  size={32}
                   style={{
-                    filter: 'drop-shadow(0 0 10px rgba(220, 38, 38, 0.8))',
+                    color: colors.medium,
+                    opacity: 0.7,
+                    filter: `drop-shadow(0 0 10px ${colors.shadowColor})`,
                     animation: `flicker ${0.5 + Math.random() * 0.5}s infinite alternate`
                   }}
+                  size={32}
                 />
               </div>
             ))}
@@ -826,12 +1033,13 @@ function HomePage({ playSound, clickSoundRef }) {
                 }}
               >
                 <Flame 
-                  className="text-orange-500 opacity-60"
-                  size={24}
                   style={{
-                    filter: 'drop-shadow(0 0 8px rgba(249, 115, 22, 0.8))',
+                    color: colors.accent,
+                    opacity: 0.6,
+                    filter: `drop-shadow(0 0 8px ${colors.accent})`,
                     animation: `flicker ${0.6 + Math.random() * 0.4}s infinite alternate`
                   }}
+                  size={24}
                 />
               </div>
             ))}
@@ -840,30 +1048,34 @@ function HomePage({ playSound, clickSoundRef }) {
           {/* Inner Gold Ring */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div 
-              className="w-80 h-80 rounded-full border-4 border-yellow-600 opacity-40"
+              className="w-80 h-80 rounded-full border-4 opacity-40"
               style={{
+                borderColor: '#ca8a04',
                 boxShadow: '0 0 30px rgba(202, 138, 4, 0.5), inset 0 0 30px rgba(202, 138, 4, 0.3)'
               }}
             />
           </div>
 
           {/* Portrait Circle */}
-          <div className="relative w-72 h-72 rounded-full overflow-hidden border-8 border-red-950 bg-gradient-to-br from-gray-800 to-gray-900 z-10"
-               style={{
-                 boxShadow: '0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.5)'
-               }}>
+          <div 
+            className="relative w-72 h-72 rounded-full overflow-hidden border-8 bg-gradient-to-br from-gray-800 to-gray-900 z-10"
+            style={{
+              borderColor: colors.darker,
+              boxShadow: '0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.5)'
+            }}
+          >
             <img 
-              src="/16041.jpg" 
+              src={profileImage}
               alt="Chowdhury Abdulla Nasir" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-all duration-500"
             />
           </div>
 
-          {/* Red Accent Glow */}
+          {/* Accent Glow */}
           <div 
             className="absolute inset-0 rounded-full pointer-events-none z-20"
             style={{
-              background: 'radial-gradient(circle, transparent 40%, rgba(220, 38, 38, 0.1) 100%)'
+              background: `radial-gradient(circle, transparent 40%, ${colors.rgbaColor}0.1))`
             }}
           />
         </div>
@@ -878,21 +1090,42 @@ function HomePage({ playSound, clickSoundRef }) {
           transitionDelay: '700ms'
         }}
       >
-        <h1 className="kanji-title text-6xl md:text-7xl font-bold mb-4 text-red-50"
-        style={{ 
+        <h1 
+          className="kanji-title text-6xl md:text-7xl font-bold mb-4"
+          style={{ 
             fontFamily: '"Cinzel", serif',
-            textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(0, 0, 0, 0.8)'
-        }}>
-            蝶踊り
+            textShadow: `0 0 20px ${colors.shadowColor}, 0 0 40px rgba(0, 0, 0, 0.8)`,
+            color: colors.textLighterColor
+          }}
+        >
+          蝶踊り
         </h1>
-        <div className="flex items-center justify-center gap-4 text-red-400">
-          <div className="h-px w-12 bg-red-600" />
-          <p className="text-xl tracking-widest uppercase" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+        <div className="flex items-center justify-center gap-4">
+          <div 
+            className="h-px w-12" 
+            style={{ backgroundColor: colors.medium }} 
+          />
+          <p 
+            className="text-xl tracking-widest uppercase" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             Chowdhury Abdulla Nasir
           </p>
-          <div className="h-px w-12 bg-red-600" />
+          <div 
+            className="h-px w-12" 
+            style={{ backgroundColor: colors.medium }} 
+          />
         </div>
-        <p className="mt-4 text-red-200 text-sm tracking-wide" style={{ fontFamily: '"Noto Serif JP", serif' }}>
+        <p 
+          className="mt-4 text-sm tracking-wide" 
+          style={{ 
+            fontFamily: '"Noto Serif JP", serif',
+            color: colors.textLightColor
+          }}
+        >
           道 • Research Student @ CVLab, Tsukuba University
         </p>
       </div>
@@ -921,21 +1154,45 @@ function HomePage({ playSound, clickSoundRef }) {
         }}
       >
         {[
-          { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js' },
-          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases' },
-          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design' }
+          { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
+          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
+          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: null }
         ].map((skill, i) => (
           <div 
             key={i}
             className="relative group"
+            onClick={skill.action}
+            style={{ cursor: skill.action ? 'pointer' : 'default' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-red-900 to-red-950 rounded-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
-            <div className="relative border border-red-800 rounded-lg p-6 backdrop-blur-sm bg-black/40 hover:border-red-600 transition-all duration-300 hover:scale-105"
-                 style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}>
-              <h3 className="text-3xl text-red-400 mb-2" style={{ fontFamily: '"Noto Serif JP", serif' }}>
+            <div 
+              className="absolute inset-0 rounded-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300"
+              style={{
+                background: `linear-gradient(to bottom right, ${colors.dark}, ${colors.darkest})`
+              }}
+            />
+            <div 
+              className="relative rounded-lg p-6 backdrop-blur-sm bg-black/40 transition-all duration-300 hover:scale-105"
+              style={{ 
+                boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+                border: `1px solid ${colors.borderColor}`
+              }}
+            >
+              <h3 
+                className="text-3xl mb-2" 
+                style={{ 
+                  fontFamily: '"Noto Serif JP", serif',
+                  color: colors.textColor
+                }}
+              >
                 {skill.title}
               </h3>
-              <p className="text-red-200 font-semibold mb-2 tracking-wide" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+              <p 
+                className="font-semibold mb-2 tracking-wide" 
+                style={{ 
+                  fontFamily: '"Rajdhani", sans-serif',
+                  color: colors.textLightColor
+                }}
+              >
                 {skill.subtitle}
               </p>
               <p className="text-gray-400 text-sm">
@@ -956,16 +1213,21 @@ function HomePage({ playSound, clickSoundRef }) {
         }}
       >
         <div className="flex justify-center mb-3">
-          <Wind className="text-red-600" size={24} />
+          <Wind style={{ color: colors.medium }} size={24} />
         </div>
-        <div className="h-px bg-gradient-to-r from-transparent via-red-600 to-transparent" />
+        <div 
+          className="h-px"
+          style={{
+            background: `linear-gradient(to right, transparent, ${colors.medium}, transparent)`
+          }}
+        />
       </div>
     </div>
   );
 }
 
 // Research Page Component
-function ResearchPage({ playSound, clickSoundRef }) {
+function ResearchPage({ playSound, clickSoundRef, colors }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -1046,26 +1308,41 @@ function ResearchPage({ playSound, clickSoundRef }) {
 
   return (
     <div className="min-h-screen px-6 py-24">
-      {showButterflies && <MultipleButterflies />}
+      {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
-              style={{ 
-                fontFamily: '"Cinzel", serif',
-                textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
-              }}>
+          <h1 
+            className="kanji-title text-5xl md:text-6xl font-bold mb-4"
+            style={{ 
+              fontFamily: '"Cinzel", serif',
+              textShadow: `0 0 20px ${colors.shadowColor}`,
+              color: colors.textLighterColor
+            }}
+          >
             研究 • Research
           </h1>
-          <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <p 
+            className="text-lg" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             CVLab, University of Tsukuba, Japan
           </p>
         </div>
 
         {/* Academic Profiles */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.1s' }}>
-          <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <h2 
+            className="text-2xl font-bold mb-6" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             ACADEMIC PROFILES
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
@@ -1076,18 +1353,29 @@ function ResearchPage({ playSound, clickSoundRef }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => playSound(clickSoundRef)}
-                className="p-6 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 hover:bg-black/60 transition-all duration-300 group"
-                style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+                className="p-6 rounded-lg bg-black/40 backdrop-blur-sm transition-all duration-300 group"
+                style={{ 
+                  boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+                  border: `1px solid ${colors.borderColor}`
+                }}
               >
-                <div className="text-5xl mb-3 font-bold group-hover:scale-110 transition-transform duration-300 text-center"
-                     style={{ 
-                       fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif',
-                       textShadow: '0 0 15px rgba(220, 38, 38, 0.4)',
-                       color: '#fca5a5'
-                     }}>
+                <div 
+                  className="text-5xl mb-3 font-bold group-hover:scale-110 transition-transform duration-300 text-center"
+                  style={{ 
+                    fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif',
+                    textShadow: `0 0 15px ${colors.shadowColor}`,
+                    color: colors.lighter
+                  }}
+                >
                   {profile.icon}
                 </div>
-                <h3 className="text-xl font-bold text-red-100 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+                <h3 
+                  className="text-xl font-bold mb-2" 
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    color: colors.textLightColor
+                  }}
+                >
                   {profile.name}
                 </h3>
                 <p className="text-gray-400 text-sm">{profile.description}</p>
@@ -1098,16 +1386,30 @@ function ResearchPage({ playSound, clickSoundRef }) {
 
         {/* Research Interests */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <h2 
+            className="text-2xl font-bold mb-6" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             RESEARCH INTERESTS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {['Computer Vision', 'Deep Learning', 'Image Processing', 'Pattern Recognition'].map((interest, i) => (
               <div 
                 key={i} 
-                className="p-4 border border-red-900 rounded-lg bg-black/40 backdrop-blur-sm"
+                className="p-4 rounded-lg bg-black/40 backdrop-blur-sm"
+                style={{ border: `1px solid ${colors.borderColor}` }}
               >
-                <p className="text-red-200" style={{ fontFamily: '"Rajdhani", sans-serif' }}>{interest}</p>
+                <p 
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    color: colors.textLightColor
+                  }}
+                >
+                  {interest}
+                </p>
               </div>
             ))}
           </div>
@@ -1115,27 +1417,47 @@ function ResearchPage({ playSound, clickSoundRef }) {
 
         {/* Publications */}
         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
-          <h2 className="text-2xl font-bold text-red-400 mb-6" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <h2 
+            className="text-2xl font-bold mb-6" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             PUBLICATIONS
           </h2>
           <div className="space-y-6">
             {publications.map((pub, i) => (
               <div 
                 key={i}
-                className="p-6 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 transition-all duration-300"
-                style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+                className="p-6 rounded-lg bg-black/40 backdrop-blur-sm transition-all duration-300"
+                style={{ 
+                  boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+                  border: `1px solid ${colors.borderMediumColor}`
+                }}
               >
-                <h3 className="text-xl font-bold text-red-100 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+                <h3 
+                  className="text-xl font-bold mb-2" 
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    color: colors.textLightColor
+                  }}
+                >
                   {pub.title}
                 </h3>
-                <p className="text-red-300 mb-2">{pub.authors}</p>
+                <p style={{ color: colors.textColor }}>{pub.authors}</p>
                 <p className="text-gray-400 italic mb-3">{pub.venue}</p>
                 <p className="text-gray-300 mb-4">{pub.abstract}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {pub.tags.map((tag, j) => (
                     <span 
                       key={j}
-                      className="px-3 py-1 bg-red-900/50 text-red-200 text-sm rounded-full border border-red-800"
+                      className="px-3 py-1 text-sm rounded-full"
+                      style={{
+                        backgroundColor: `${colors.rgbaColor}0.2)`,
+                        color: colors.textLightColor,
+                        border: `1px solid ${colors.borderMediumColor}`
+                      }}
                     >
                       {tag}
                     </span>
@@ -1146,8 +1468,11 @@ function ResearchPage({ playSound, clickSoundRef }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => playSound(clickSoundRef)}
-                  className="inline-block px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                  style={{ fontFamily: '"Rajdhani", sans-serif' }}
+                  className="inline-block px-6 py-2 text-white rounded transition-colors"
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    backgroundColor: colors.medium
+                  }}
                 >
                   READ PAPER
                 </a>
@@ -1160,7 +1485,7 @@ function ResearchPage({ playSound, clickSoundRef }) {
   );
 }
 // Projects Page Component
-function ProjectsPage({ playSound, clickSoundRef }) {
+function ProjectsPage({ playSound, clickSoundRef, colors }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -1207,19 +1532,28 @@ function ProjectsPage({ playSound, clickSoundRef }) {
 
   return (
     <div className="min-h-screen px-6 py-24">
-      {showButterflies && <MultipleButterflies />}
+      {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
-              style={{ 
-                fontFamily: '"Cinzel", serif',
-                textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
-              }}>
+          <h1 
+            className="kanji-title text-5xl md:text-6xl font-bold mb-4"
+            style={{ 
+              fontFamily: '"Cinzel", serif',
+              textShadow: `0 0 20px ${colors.shadowColor}`,
+              color: colors.textLighterColor
+            }}
+          >
             作品 • Projects
           </h1>
-          <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <p 
+            className="text-lg" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             Crafted with precision and purpose
           </p>
         </div>
@@ -1229,13 +1563,20 @@ function ProjectsPage({ playSound, clickSoundRef }) {
           {projects.map((project, i) => (
             <div 
               key={i}
-              className="fade-in border border-red-800 rounded-lg p-6 bg-black/40 backdrop-blur-sm hover:border-red-600 transition-all duration-300 hover:scale-105"
+              className="fade-in rounded-lg p-6 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:scale-105"
               style={{ 
                 boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
-                animationDelay: `${i * 0.1}s`
+                animationDelay: `${i * 0.1}s`,
+                border: `1px solid ${colors.borderColor}`
               }}
             >
-              <h3 className="text-2xl font-bold text-red-400 mb-3" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+              <h3 
+                className="text-2xl font-bold mb-3" 
+                style={{ 
+                  fontFamily: '"Rajdhani", sans-serif',
+                  color: colors.textColor
+                }}
+              >
                 {project.title}
               </h3>
               <p className="text-gray-300 mb-4">{project.description}</p>
@@ -1243,7 +1584,12 @@ function ProjectsPage({ playSound, clickSoundRef }) {
                 {project.tech.map((tech, j) => (
                   <span 
                     key={j}
-                    className="px-2 py-1 bg-red-950/50 text-red-200 text-xs rounded border border-red-900"
+                    className="px-2 py-1 text-xs rounded"
+                    style={{
+                      backgroundColor: `${colors.rgbaColor}0.2)`,
+                      color: colors.textLightColor,
+                      border: `1px solid ${colors.borderMediumColor}`
+                    }}
                   >
                     {tech}
                   </span>
@@ -1255,8 +1601,11 @@ function ProjectsPage({ playSound, clickSoundRef }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => playSound(clickSoundRef)}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white text-center rounded hover:bg-red-700 transition-colors text-sm"
-                  style={{ fontFamily: '"Rajdhani", sans-serif' }}
+                  className="flex-1 px-4 py-2 text-white text-center rounded transition-colors text-sm"
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    backgroundColor: colors.medium
+                  }}
                 >
                   CODE
                 </a>
@@ -1266,8 +1615,12 @@ function ProjectsPage({ playSound, clickSoundRef }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => playSound(clickSoundRef)}
-                    className="flex-1 px-4 py-2 border border-red-600 text-red-400 text-center rounded hover:bg-red-600 hover:text-white transition-all text-sm"
-                    style={{ fontFamily: '"Rajdhani", sans-serif' }}
+                    className="flex-1 px-4 py-2 text-center rounded transition-all text-sm"
+                    style={{ 
+                      fontFamily: '"Rajdhani", sans-serif',
+                      border: `1px solid ${colors.medium}`,
+                      color: colors.textColor
+                    }}
                   >
                     DEMO
                   </a>
@@ -1282,7 +1635,7 @@ function ProjectsPage({ playSound, clickSoundRef }) {
 }
 
 // Contact Page Component
-function ContactPage({ socialLinks, playSound, clickSoundRef }) {
+function ContactPage({ socialLinks, playSound, clickSoundRef, colors }) {
   const [showButterflies, setShowButterflies] = useState(true);
 
   useEffect(() => {
@@ -1305,19 +1658,28 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
  }, []);
   return (
     <div className="min-h-screen px-6 py-24 flex items-center justify-center">
-      {showButterflies && <MultipleButterflies />}
+      {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-3xl w-full">
         {/* Header */}
         <div className="text-center mb-16 fade-in">
-          <h1 className="kanji-title text-5xl md:text-6xl font-bold mb-4 text-red-50"
-              style={{ 
-                fontFamily: '"Cinzel", serif',
-                textShadow: '0 0 20px rgba(220, 38, 38, 0.5)'
-              }}>
+          <h1 
+            className="kanji-title text-5xl md:text-6xl font-bold mb-4"
+            style={{ 
+              fontFamily: '"Cinzel", serif',
+              textShadow: `0 0 20px ${colors.shadowColor}`,
+              color: colors.textLighterColor
+            }}
+          >
             連絡 • Contact
           </h1>
-          <p className="text-red-300 text-lg" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <p 
+            className="text-lg" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             Let's connect and collaborate
           </p>
         </div>
@@ -1325,17 +1687,35 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
         {/* Contact Info */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
           <div 
-            className="p-8 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm text-center"
-            style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+            className="p-8 rounded-lg bg-black/40 backdrop-blur-sm text-center"
+            style={{ 
+              boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+              border: `1px solid ${colors.borderColor}`
+            }}
           >
-            <Mail className="text-red-400 mx-auto mb-4" size={48} />
-            <h2 className="text-2xl font-bold text-red-200 mb-2" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+            <Mail 
+              style={{
+                color: colors.textColor,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginBottom: '1rem'
+              }} 
+              size={48} 
+            />
+            <h2 
+              className="text-2xl font-bold mb-2" 
+              style={{ 
+                fontFamily: '"Rajdhani", sans-serif',
+                color: colors.textLightColor
+              }}
+            >
               EMAIL
             </h2>
             <a 
               href="mailto:abdullahnasirchowdhury1@gmail.com"
               onClick={() => playSound(clickSoundRef)}
-              className="text-red-400 hover:text-red-300 text-lg transition-colors"
+              className="text-lg transition-colors"
+              style={{ color: colors.textColor }}
             >
               Click to Email Me
             </a>
@@ -1344,7 +1724,13 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
 
         {/* Social Links Grid */}
         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
-          <h2 className="text-2xl font-bold text-red-400 mb-6 text-center" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+          <h2 
+            className="text-2xl font-bold mb-6 text-center" 
+            style={{ 
+              fontFamily: '"Rajdhani", sans-serif',
+              color: colors.textColor
+            }}
+          >
             CONNECT ON SOCIAL MEDIA
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -1355,11 +1741,20 @@ function ContactPage({ socialLinks, playSound, clickSoundRef }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => playSound(clickSoundRef)}
-                className="p-6 border border-red-800 rounded-lg bg-black/40 backdrop-blur-sm hover:border-red-600 transition-all duration-300 hover:scale-105 flex flex-col items-center gap-3"
-                style={{ boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }}
+                className={`p-6 rounded-lg bg-black/40 backdrop-blur-sm transition-all duration-300 hover:scale-105 flex flex-col items-center gap-3 ${social.color}`}
+                style={{ 
+                  boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
+                  border: `1px solid ${colors.borderColor}`
+                }}
               >
-                <social.icon className={`text-red-400 ${social.color} transition-colors`} size={32} />
-                <span className="text-red-200 font-semibold" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+                <social.icon style={{ color: colors.textColor }} size={32} />
+                <span 
+                  className="font-semibold" 
+                  style={{ 
+                    fontFamily: '"Rajdhani", sans-serif',
+                    color: colors.textLightColor
+                  }}
+                >
                   {social.name}
                 </span>
               </a>
