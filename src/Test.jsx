@@ -9,7 +9,7 @@ export default function SamuraiPortfolio() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [theme, setTheme] = useState('red'); // 'red', 'blue', or 'black'
-  const [profileImage, setProfileImage] = useState('/16041.jpg'); // NEW: State for profile image
+  const [profileImage, setProfileImage] = useState('/a.jpg'); // NEW: State for profile image
   
 // Audio refs
 const bgMusicRef = useRef(null);
@@ -949,13 +949,15 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
  };
 
  // NEW: Handle image change when clicking backend card
+ const imageArray = ['/doflamingo.png', '/a.jpg', '/b.jpg', '/c.jpg', '/d.jpg', '/e.jpg', '/f.jpg', '/g.jpg'];
+ 
  const handleImageChange = () => {
    playSound(clickSoundRef);
-   // Replace '/new-image.jpg' with the path to your desired image
-   // You can also cycle through multiple images if you want
-   setProfileImage(prevImage => 
-     prevImage === '/16041.jpg' ? '/doflamingo.png' : '/16041.jpg'
-   );
+   setProfileImage(prevImage => {
+     const currentIndex = imageArray.indexOf(prevImage);
+     const nextIndex = (currentIndex + 1) % imageArray.length;
+     return imageArray[nextIndex];
+   });
  };
 
   return (
