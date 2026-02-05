@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX } from 'lucide-react';
 
 export default function SamuraiPortfolio() {
@@ -889,14 +890,12 @@ function MultipleButterflies({ colors }) {
 function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
+  const navigate = useNavigate();
 
   // FIXED: Simple navigation function using window.location
   const handleNavigateToModern = () => {
     playSound(clickSoundRef);
-    // Change this URL to wherever your modern portfolio is located
-    window.location.href = '/modern'; 
-    // Or if it's on a different domain:
-    // window.location.href = 'https://yoursite.com/modern';
+    navigate('/modern');
   };
 
   useEffect(() => {
