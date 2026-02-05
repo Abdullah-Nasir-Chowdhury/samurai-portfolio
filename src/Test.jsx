@@ -9,7 +9,7 @@ export default function SamuraiPortfolio() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [theme, setTheme] = useState('red'); // 'red', 'blue', or 'black'
-  const [profileImage, setProfileImage] = useState('/a.jpg'); // NEW: State for profile image
+  const [profileImage, setProfileImage] = useState('/a.jpg');
   
 // Audio refs
 const bgMusicRef = useRef(null);
@@ -117,15 +117,10 @@ useEffect(() => {
 useEffect(() => {
   const initAudio = () => {
     try {
-      // Use absolute paths from public folder - this works on Vercel
-      // Files should be placed in: public/audio/moonlight.mp3 and public/audio/a6.mp3
-      
-      // Background Music
       bgMusicRef.current = new Audio('/audio/moonlight.mp3');
       bgMusicRef.current.loop = true;
       bgMusicRef.current.volume = 0.2;
       
-      // Add error handlers
       bgMusicRef.current.addEventListener('error', (e) => {
         console.error('Background music failed to load. Make sure moonlight.mp3 exists in public/audio/', e);
       });
@@ -135,21 +130,18 @@ useEffect(() => {
         setAudioInitialized(true);
       });
 
-      // Click Sound
       clickSoundRef.current = new Audio('/audio/a6.mp3');
       clickSoundRef.current.volume = 1.0;
       clickSoundRef.current.addEventListener('error', (e) => {
         console.error('Click sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
 
-      // Page Switch Sound
       pageSwitchSoundRef.current = new Audio('/audio/a6.mp3');
       pageSwitchSoundRef.current.volume = 1.0;
       pageSwitchSoundRef.current.addEventListener('error', (e) => {
         console.error('Page switch sound failed to load. Make sure a6.mp3 exists in public/audio/', e);
       });
       
-      // Preload audio
       bgMusicRef.current.load();
       clickSoundRef.current.load();
       pageSwitchSoundRef.current.load();
@@ -162,7 +154,6 @@ useEffect(() => {
   initAudio();
 
   return () => {
-    // Cleanup
     if (bgMusicRef.current) {
       bgMusicRef.current.pause();
       bgMusicRef.current.src = '';
@@ -182,14 +173,12 @@ useEffect(() => {
 // Toggle all audio (music and sound effects)
 const toggleAudio = async () => {
   if (isMusicPlaying || !isMuted) {
-    // Turn everything off
     if (bgMusicRef.current) {
       bgMusicRef.current.pause();
     }
     setIsMusicPlaying(false);
     setIsMuted(true);
   } else {
-    // Turn everything on
     if (bgMusicRef.current) {
       try {
         await bgMusicRef.current.play();
@@ -197,7 +186,6 @@ const toggleAudio = async () => {
         setIsMuted(false);
       } catch (error) {
         console.error('Audio play failed:', error);
-        // Show user-friendly error
         alert('Unable to play audio. Please make sure:\n1. Audio files exist in public/audio/ folder\n2. You have interacted with the page (browsers require user interaction for audio)');
       }
     }
@@ -208,7 +196,6 @@ const toggleAudio = async () => {
 const playSound = async (soundRef) => {
   if (!isMuted && soundRef.current) {
     try {
-      // Clone the audio for overlapping sounds
       const sound = soundRef.current.cloneNode();
       sound.volume = soundRef.current.volume;
       await sound.play();
@@ -310,7 +297,7 @@ const playSound = async (soundRef) => {
         </div>
       </div>
 
-      {/* Single Audio Control - NO SOUND ON CLICK */}
+      {/* Single Audio Control */}
       <div className="fixed top-6 left-6 z-50">
         <button
           onClick={toggleAudio}
@@ -423,7 +410,6 @@ const playSound = async (soundRef) => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
         
-        /* Hide default cursor only on non-touch devices */
         @media (hover: hover) and (pointer: fine) {
           * {
             cursor: none !important;
@@ -673,6 +659,7 @@ const playSound = async (soundRef) => {
     </div>
   );
 }
+
 // Cursor Component
 function CustomCursor({ colors }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -680,7 +667,6 @@ function CustomCursor({ colors }) {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    // Detect if device supports touch
     const checkTouchDevice = () => {
       return (
         'ontouchstart' in window ||
@@ -710,14 +696,12 @@ function CustomCursor({ colors }) {
     };
   }, []);
 
-  // Don't render cursor on touch devices
   if (isTouchDevice) {
     return null;
   }
 
   return (
     <>
-      {/* Main cursor dot */}
       <div
         className="fixed pointer-events-none z-50 mix-blend-difference"
         style={{
@@ -737,7 +721,6 @@ function CustomCursor({ colors }) {
         />
       </div>
 
-      {/* Outer halo */}
       <div
         className="fixed pointer-events-none z-50"
         style={{
@@ -787,7 +770,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
         dotColor: '#082f49'
       };
     } else {
-      // Black theme
       return {
         wingGradient: 'url(#leftWingGradient)',
         wingColor1: '#9ca3af',
@@ -812,7 +794,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
       }}
     >
       <div className="relative" style={{ width: '30px', height: '30px' }}>
-        {/* Butterfly Body */}
         <div 
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full z-10"
           style={{
@@ -821,7 +802,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
           }}
         />
         
-        {/* Left Wing */}
         <div className="butterfly-wing-left absolute left-0 top-1/2 -translate-y-1/2 origin-right">
           <svg width="15" height="20" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M28 20C28 28 22 38 15 38C8 38 5 30 5 20C5 10 8 2 15 2C22 2 28 12 28 20Z" 
@@ -848,7 +828,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
           </svg>
         </div>
         
-        {/* Right Wing */}
         <div className="butterfly-wing-right absolute right-0 top-1/2 -translate-y-1/2 origin-left">
           <svg width="15" height="20" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 20C2 28 8 38 15 38C22 38 25 30 25 20C25 10 22 2 15 2C8 2 2 12 2 20Z" 
@@ -875,7 +854,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
           </svg>
         </div>
 
-        {/* Antennae */}
         <div 
           className="absolute left-1/2 top-0 -translate-x-1 w-0.5 h-1.5 rounded-full origin-bottom"
           style={{ 
@@ -895,7 +873,6 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
   );
 }
 
-// Multiple Butterflies Component
 function MultipleButterflies({ colors }) {
   return (
     <>
@@ -908,10 +885,19 @@ function MultipleButterflies({ colors }) {
   );
 }
 
-// Home Page Component
+// Home Page Component - FIXED NAVIGATION
 function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
+
+  // FIXED: Simple navigation function using window.location
+  const handleNavigateToModern = () => {
+    playSound(clickSoundRef);
+    // Change this URL to wherever your modern portfolio is located
+    window.location.href = '/modern'; 
+    // Or if it's on a different domain:
+    // window.location.href = 'https://yoursite.com/modern';
+  };
 
   useEffect(() => {
     setIsLoaded(true);
@@ -924,7 +910,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
     return () => clearTimeout(timer);
   }, []);
 
-  // Kanji Shimmer Effect Loop
   useEffect(() => {
   const shimmerInterval = setInterval(() => {
     const kanjiElement = document.querySelector('.kanji-title');
@@ -948,8 +933,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
    });
  };
 
- // NEW: Handle image change when clicking backend card
- const imageArray = ['/doflamingo.png', '/a.jpg', '/b.jpg', '/c.jpg', '/d.jpg', '/e.jpg', '/f.jpg', '/g.jpg'];
+ const imageArray = ['/doflamingo.png', '/a.jpg', '/b.jpg', '/c.jpg', '/d.jpg', '/e.jpg', '/f.jpg', '/g.jpg', '/h.jpg', '/i.jpg', '/j.jpg', '/k.jpg', '/l.jpg', '/m.jpg', '/n.jpg', '/o.jpg', '/p.jpg', '/q.jpg',];
  
  const handleImageChange = () => {
    playSound(clickSoundRef);
@@ -964,7 +948,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies colors={colors} />}
       
-      {/* Decorative Top Line */}
       <div 
         className="w-full max-w-4xl mb-12 transition-all duration-1000"
         style={{
@@ -983,7 +966,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         </div>
       </div>
 
-      {/* Flaming Circle Portrait */}
       <div 
         className="relative mb-12 transition-all duration-1000"
         style={{
@@ -1001,7 +983,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         />
         
         <div className="relative w-80 h-80 flex items-center justify-center">
-          {/* Outer Flame Ring */}
           <div className="absolute inset-0 flame-ring-outer">
             {[...Array(12)].map((_, i) => (
               <div
@@ -1024,7 +1005,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             ))}
           </div>
 
-          {/* Inner Flame Layer */}
           <div className="absolute inset-0 flame-ring-inner">
             {[...Array(8)].map((_, i) => (
               <div
@@ -1047,7 +1027,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             ))}
           </div>
 
-          {/* Inner Gold Ring */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div 
               className="w-80 h-80 rounded-full border-4 opacity-40"
@@ -1058,7 +1037,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             />
           </div>
 
-          {/* Portrait Circle */}
           <div 
             className="relative w-72 h-72 rounded-full overflow-hidden border-8 bg-gradient-to-br from-gray-800 to-gray-900 z-10"
             style={{
@@ -1073,7 +1051,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             />
           </div>
 
-          {/* Accent Glow */}
           <div 
             className="absolute inset-0 rounded-full pointer-events-none z-20"
             style={{
@@ -1083,7 +1060,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         </div>
       </div>
 
-      {/* Name & Title */}
       <div 
         className="text-center mb-8 transition-all duration-1000"
         style={{
@@ -1132,7 +1108,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         </p>
       </div>
 
-      {/* About Section */}
       <div 
         className="max-w-2xl text-center mb-12 transition-all duration-1000"
         style={{
@@ -1146,7 +1121,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         </p>
       </div>
 
-      {/* Skills/Expertise Cards */}
       <div 
         className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mb-12 transition-all duration-1000"
         style={{
@@ -1158,7 +1132,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         {[
           { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
           { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
-          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: null }
+          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
         ].map((skill, i) => (
           <div 
             key={i}
@@ -1205,7 +1179,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         ))}
       </div>
 
-      {/* Decorative Bottom Line */}
       <div 
         className="w-full max-w-4xl mt-12 transition-all duration-1000"
         style={{
@@ -1313,7 +1286,6 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16 fade-in">
           <h1 
             className="kanji-title text-5xl md:text-6xl font-bold mb-4"
@@ -1336,7 +1308,6 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
           </p>
         </div>
 
-        {/* Academic Profiles */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.1s' }}>
           <h2 
             className="text-2xl font-bold mb-6" 
@@ -1386,7 +1357,6 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
           </div>
         </div>
 
-        {/* Research Interests */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
           <h2 
             className="text-2xl font-bold mb-6" 
@@ -1417,7 +1387,6 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
           </div>
         </div>
 
-        {/* Publications */}
         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
           <h2 
             className="text-2xl font-bold mb-6" 
@@ -1486,6 +1455,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
     </div>
   );
 }
+
 // Projects Page Component
 function ProjectsPage({ playSound, clickSoundRef, colors }) {
   const [showButterflies, setShowButterflies] = useState(true);
@@ -1537,7 +1507,6 @@ function ProjectsPage({ playSound, clickSoundRef, colors }) {
       {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16 fade-in">
           <h1 
             className="kanji-title text-5xl md:text-6xl font-bold mb-4"
@@ -1560,7 +1529,6 @@ function ProjectsPage({ playSound, clickSoundRef, colors }) {
           </p>
         </div>
 
-        {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, i) => (
             <div 
@@ -1663,7 +1631,6 @@ function ContactPage({ socialLinks, playSound, clickSoundRef, colors }) {
       {showButterflies && <MultipleButterflies colors={colors} />}
       
       <div className="max-w-3xl w-full">
-        {/* Header */}
         <div className="text-center mb-16 fade-in">
           <h1 
             className="kanji-title text-5xl md:text-6xl font-bold mb-4"
@@ -1686,7 +1653,6 @@ function ContactPage({ socialLinks, playSound, clickSoundRef, colors }) {
           </p>
         </div>
 
-        {/* Contact Info */}
         <div className="mb-12 fade-in" style={{ animationDelay: '0.2s' }}>
           <div 
             className="p-8 rounded-lg bg-black/40 backdrop-blur-sm text-center"
@@ -1724,7 +1690,6 @@ function ContactPage({ socialLinks, playSound, clickSoundRef, colors }) {
           </div>
         </div>
 
-        {/* Social Links Grid */}
         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
           <h2 
             className="text-2xl font-bold mb-6 text-center" 
@@ -1764,7 +1729,6 @@ function ContactPage({ socialLinks, playSound, clickSoundRef, colors }) {
           </div>
         </div>
 
-        {/* University Info */}
         <div className="mt-12 fade-in text-center" style={{ animationDelay: '0.6s' }}>
           <p className="text-gray-400" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
             CVLab, University of Tsukuba<br />
