@@ -7,16 +7,52 @@ export default function BlogPlatform() {
   const [showComposer, setShowComposer] = useState(false);
   const [newPost, setNewPost] = useState({ title: '', content: '' });
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('all'); // all, trending, following
+  const [activeTab, setActiveTab] = useState('all');
+  const [storageAvailable, setStorageAvailable] = useState(false);
+
+  // Check if window.storage is available
+  useEffect(() => {
+    const checkStorage = async () => {
+      try {
+        if (window.storage && typeof window.storage.set === 'function') {
+          setStorageAvailable(true);
+        } else {
+          console.warn('window.storage not available, using in-memory storage');
+          setStorageAvailable(false);
+        }
+      } catch (error) {
+        console.warn('Storage check failed:', error);
+        setStorageAvailable(false);
+      }
+      setIsLoading(false);
+    };
+    
+    checkStorage();
+  }, []);
 
   // Load posts on mount
   useEffect(() => {
-    loadPosts();
-  }, []);
+    if (!isLoading) {
+      loadPosts();
+    }
+  }, [isLoading]);
 
   const loadPosts = async () => {
+    if (!storageAvailable) {
+      // Load from localStorage as fallback
+      try {
+        const stored = localStorage.getItem('thoughtstream_posts');
+        if (stored) {
+          const loadedPosts = JSON.parse(stored);
+          setPosts(loadedPosts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+        }
+      } catch (error) {
+        console.log('No existing posts, starting fresh');
+      }
+      return;
+    }
+
     try {
-      setIsLoading(true);
       const keys = await window.storage.list('post:', true);
       
       if (keys && keys.keys) {
@@ -38,10 +74,16 @@ export default function BlogPlatform() {
         setPosts(validPosts);
       }
     } catch (error) {
-      console.log('No existing posts, starting fresh');
+      console.log('Error loading posts:', error);
       setPosts([]);
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const saveToLocalStorage = (updatedPosts) => {
+    try {
+      localStorage.setItem('thoughtstream_posts', JSON.stringify(updatedPosts));
+    } catch (error) {
+      console.error('Failed to save to localStorage:', error);
     }
   };
 
@@ -63,25 +105,61 @@ export default function BlogPlatform() {
       }
     };
 
+    const updatedPosts = [post, ...posts];
+
+    if (!storageAvailable) {
+      // Use localStorage fallback
+      try {
+        saveToLocalStorage(updatedPosts);
+        setPosts(updatedPosts);
+        setNewPost({ title: '', content: '' });
+        setShowComposer(false);
+        return;
+      } catch (error) {
+        console.error('Failed to save post:', error);
+        alert('Failed to save post. Please try again.');
+        return;
+      }
+    }
+
     try {
       await window.storage.set(`post:${post.id}`, JSON.stringify(post), true);
-      setPosts(prev => [post, ...prev]);
+      setPosts(updatedPosts);
       setNewPost({ title: '', content: '' });
       setShowComposer(false);
     } catch (error) {
       console.error('Failed to save post:', error);
-      alert('Failed to save post. Please try again.');
+      // Try localStorage as fallback
+      try {
+        saveToLocalStorage(updatedPosts);
+        setPosts(updatedPosts);
+        setNewPost({ title: '', content: '' });
+        setShowComposer(false);
+      } catch (fallbackError) {
+        alert('Failed to save post. Please try again.');
+      }
     }
   };
 
   const deletePost = async (postId) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
     
+    const updatedPosts = posts.filter(p => p.id !== postId);
+
+    if (!storageAvailable) {
+      saveToLocalStorage(updatedPosts);
+      setPosts(updatedPosts);
+      return;
+    }
+
     try {
       await window.storage.delete(`post:${postId}`, true);
-      setPosts(prev => prev.filter(p => p.id !== postId));
+      setPosts(updatedPosts);
     } catch (error) {
       console.error('Failed to delete post:', error);
+      // Fallback to localStorage
+      saveToLocalStorage(updatedPosts);
+      setPosts(updatedPosts);
     }
   };
 
@@ -94,11 +172,22 @@ export default function BlogPlatform() {
       likes: post.likes + 1
     };
 
+    const updatedPosts = posts.map(p => p.id === postId ? updatedPost : p);
+
+    if (!storageAvailable) {
+      saveToLocalStorage(updatedPosts);
+      setPosts(updatedPosts);
+      return;
+    }
+
     try {
       await window.storage.set(`post:${postId}`, JSON.stringify(updatedPost), true);
-      setPosts(prev => prev.map(p => p.id === postId ? updatedPost : p));
+      setPosts(updatedPosts);
     } catch (error) {
       console.error('Failed to update likes:', error);
+      // Fallback to localStorage
+      saveToLocalStorage(updatedPosts);
+      setPosts(updatedPosts);
     }
   };
 
@@ -251,6 +340,24 @@ export default function BlogPlatform() {
       `}</style>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto', padding: '0 20px' }}>
+        {/* Storage Status Banner */}
+        {!storageAvailable && (
+          <div style={{
+            background: 'rgba(251, 191, 36, 0.15)',
+            border: '1px solid rgba(251, 191, 36, 0.3)',
+            borderRadius: '12px',
+            padding: '12px 20px',
+            marginTop: '20px',
+            marginBottom: '10px',
+            fontSize: '14px',
+            color: '#fcd34d',
+            fontFamily: '"Space Mono", monospace',
+            textAlign: 'center'
+          }}>
+            ⚠️ Using local storage mode - posts are saved in your browser only
+          </div>
+        )}
+
         {/* Header */}
         <header style={{
           padding: '30px 0',
