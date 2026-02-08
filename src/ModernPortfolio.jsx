@@ -81,8 +81,8 @@ export default function ModernPortfolio() {
       {/* About Section */}
       <AboutSection />
 
-      {/* Research Section */}
-      <ResearchSection />
+      {/* Expertise Cards Section */}
+      <ExpertiseSection />
 
       {/* Projects Section */}
       <ProjectsSection activeProject={activeProject} setActiveProject={setActiveProject} />
@@ -400,6 +400,89 @@ function AboutSection() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ExpertiseSection() {
+  const expertise = [
+    {
+      title: '剣術',
+      subtitle: 'Frontend Mastery',
+      desc: 'React, Vue, Next.js',
+      gradient: 'from-cyan-500 to-blue-500',
+      icon: '⚡'
+    },
+    {
+      title: '忍術',
+      subtitle: 'Backend Arts',
+      desc: 'Node, Python, Databases',
+      gradient: 'from-purple-500 to-pink-500',
+      icon: '🔧'
+    },
+    {
+      title: '武道',
+      subtitle: 'Design Philosophy',
+      desc: 'UI/UX, Responsive Design',
+      gradient: 'from-blue-500 to-cyan-500',
+      icon: '🎨'
+    }
+  ];
+
+  return (
+    <section className="section-padding">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
+          <span className="text-gradient">Core Competencies</span>
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {expertise.map((item, i) => (
+            <div
+              key={i}
+              className="glass-morphism rounded-lg overflow-hidden hover-glow transition-all group"
+              style={{
+                opacity: 1,
+                animation: `fadeInUp 0.8s ease-out forwards`,
+                animationDelay: `${i * 0.2}s`
+              }}
+            >
+              {/* Gradient Header */}
+              <div className={`h-2 bg-gradient-to-r ${item.gradient}`} />
+              
+              <div className="p-8">
+                {/* Icon */}
+                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
+                  {item.icon}
+                </div>
+
+                {/* Title */}
+                <h3 
+                  className="text-3xl font-bold mb-2 group-hover:text-cyan-400 transition-colors"
+                  style={{
+                    backgroundImage: `linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  {item.title}
+                </h3>
+
+                {/* Subtitle */}
+                <p className="font-semibold text-lg text-gray-200 mb-3 tracking-wide">
+                  {item.subtitle}
+                </p>
+
+                {/* Description */}
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

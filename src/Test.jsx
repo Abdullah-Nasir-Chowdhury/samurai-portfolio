@@ -897,6 +897,11 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
     playSound(clickSoundRef);
     navigate('/modern');
   };
+  
+  const handleNavigateToBlog = () => {
+    playSound(clickSoundRef);
+    navigate('/blog');
+  };
 
   useEffect(() => {
     setIsLoaded(true);
@@ -1130,7 +1135,8 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
       >
         {[
           { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
-          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
+          // { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
+          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
           { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
         ].map((skill, i) => (
           <div 
