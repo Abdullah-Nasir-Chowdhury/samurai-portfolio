@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX } from 'lucide-react';
+import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 export default function SamuraiPortfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -368,6 +368,24 @@ const playSound = async (soundRef) => {
               ))}
             </ul>
           </nav>
+
+          {/* Download CV */}
+          <a
+            href="/Chowdhury_Abdulla_Nasir_CV.pdf"
+            download="Chowdhury_Abdulla_Nasir_CV.pdf"
+            onClick={() => playSound(clickSoundRef)}
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 mb-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            style={{
+              fontFamily: '"Rajdhani", sans-serif',
+              letterSpacing: '1px',
+              backgroundColor: colors.medium,
+              color: 'white',
+              boxShadow: `0 0 20px ${colors.shadowColor}`
+            }}
+          >
+            <Download size={22} />
+            <span className="text-lg">Download CV</span>
+          </a>
 
           {/* Social Links */}
           <div style={{ borderTop: `1px solid ${colors.borderColor}`, paddingTop: '1.5rem' }}>
@@ -1108,7 +1126,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             color: colors.textLightColor
           }}
         >
-          道 • Research Student @ CVLab, Tsukuba University
+          道 • M1 Student @ CVLab, University of Tsukuba
         </p>
       </div>
 
@@ -1232,33 +1250,47 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
   
   const publications = [
     {
-      title: 'Code Poisoning Through Misleading Comments: Jailbreaking Large Language Models via Contextual Deception',
-      authors: 'C.A. Nasir, et al.',
-      venue: '2025 28th International Conference on Computer and Information Technology (ICCIT)',
-      abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments. By embedding deceptive comments within code snippets, we demonstrate how LLMs can be manipulated into generating harmful or unintended outputs.',
-      link: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
-      tags: ['Machine Learning', 'AI']
+      title: 'Subspace Representation for Point Cloud Surface Inspection under Synthetic-to-Real Domain Shift',
+      authors: 'A.N. Chowdhury, et al.',
+      venue: 'ACCV 2026 (submission)',
+      status: 'Under Review',
+      abstract: 'We test subspace classifiers for robustness to synthetic-to-real domain shift on point cloud surface inspection: an end-to-end U-Net, PointNet++, a nearest-subspace rule on frozen features, and training-free shape subspaces, evaluated on four fuselage scans and 597 annotated Real3D-AD objects. The nearest-subspace margin is the only decision rule whose operating point survives the real feature shift.',
+      link: null,
+      tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
+    },
+    {
+      title: 'Do We Still Need Rotation-Invariant Architectures? A Statistical Robustness Benchmark for Point Cloud Classification',
+      authors: 'A.N. Chowdhury, et al.',
+      venue: 'WACV 2027, Datasets Track (submission)',
+      status: 'Under Review',
+      abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion. Rotation-invariant architectures achieve the best pose robustness but rank among the lowest on noise robustness, a statistically significant trade-off; a simple invariance loss narrows this gap on unseen corruptions without transferring across corruption families.',
+      link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
+      linkLabel: 'VIEW INTERACTIVE DEMO',
+      tags: ['Computer Vision', 'Statistics', 'Robustness']
     },
     {
       title: 'Prototype and Simulation of a Real-Time GPS and PTS Architecture',
-      authors: 'C.A. Nasir, et al.',
+      authors: 'A.N. Chowdhury, et al.',
       venue: '2025 International Conference on Quantum Photonics, Artificial Intelligence, and Networking (QPAIN)',
+      status: 'Published',
       abstract: 'Our research paper explores the creation of a realtime Global Positioning System (GPS) and Passenger Tracking System (PTS), covering simulation, hardware setup, and prototype evaluation. ',
       link: 'https://ieeexplore.ieee.org/document/11172005',
-      tags: ['Computer Vision', 'Deep Learning']
+      tags: ['Embedded Systems', 'IoT']
     },
     {
       title: 'Performance Analysis of Tesseract and EasyOCR on the Novel Bangla-CrossHair Dataset',
-      authors: 'C.A. Nasir, et al.',
+      authors: 'A.N. Chowdhury, et al.',
       venue: '2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)',
+      status: 'Published',
       abstract: 'This paper presents a comparative study of key metrics for OCR engines in Bangla language processing. PyTesseract (a Python wrapper for Tesseract OCR) and EasyOCR were benchmarked on a novel dataset, "Bangla-CrossHair," created for testing OCR engines. ',
       link: 'https://ieeexplore.ieee.org/document/10969286',
-      tags: ['Machine Learning', 'AI']
+      tags: ['Machine Learning', 'OCR']
     },
     {
       title: 'ALPR: ResNet50 powered Bangla License Plate Detection and OCR using Root Mean Square Prop Optimizer and Linear SVM Classifier',
-      authors: 'C.A. Nasir, et al.',
+      authors: 'A.N. Chowdhury, et al.',
       venue: '2024 IEEE 9th International Conference for Convergence in Technology (I2CT)',
+      status: 'Published',
       abstract: 'This paper implements the MATLAB Image Processing Toolbox in detecting the license plate region using several user-defined functions in order to pre-process and process the image up until the point of extraction of characters.',
       link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning']
@@ -1373,7 +1405,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
             RESEARCH INTERESTS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {['Computer Vision', 'Deep Learning', 'Image Processing', 'Pattern Recognition'].map((interest, i) => (
+            {['Computer Vision', '3D Point Cloud Processing', 'Subspace Methods', 'Statistical Robustness Analysis'].map((interest, i) => (
               <div 
                 key={i} 
                 className="p-4 rounded-lg bg-black/40 backdrop-blur-sm"
@@ -1412,21 +1444,35 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                   border: `1px solid ${colors.borderMediumColor}`
                 }}
               >
-                <h3 
-                  className="text-xl font-bold mb-2" 
-                  style={{ 
-                    fontFamily: '"Rajdhani", sans-serif',
-                    color: colors.textLightColor
-                  }}
-                >
-                  {pub.title}
-                </h3>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3
+                    className="text-xl font-bold"
+                    style={{
+                      fontFamily: '"Rajdhani", sans-serif',
+                      color: colors.textLightColor
+                    }}
+                  >
+                    {pub.title}
+                  </h3>
+                  {pub.status && (
+                    <span
+                      className="shrink-0 px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap"
+                      style={{
+                        backgroundColor: pub.status === 'Published' ? `${colors.rgbaColor}0.25)` : 'rgba(107,114,128,0.25)',
+                        color: pub.status === 'Published' ? colors.textLightColor : '#d1d5db',
+                        border: `1px solid ${pub.status === 'Published' ? colors.borderMediumColor : '#6b7280'}`
+                      }}
+                    >
+                      {pub.status.toUpperCase()}
+                    </span>
+                  )}
+                </div>
                 <p style={{ color: colors.textColor }}>{pub.authors}</p>
                 <p className="text-gray-400 italic mb-3">{pub.venue}</p>
                 <p className="text-gray-300 mb-4">{pub.abstract}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {pub.tags.map((tag, j) => (
-                    <span 
+                    <span
                       key={j}
                       className="px-3 py-1 text-sm rounded-full"
                       style={{
@@ -1439,19 +1485,21 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                     </span>
                   ))}
                 </div>
-                <a 
-                  href={pub.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => playSound(clickSoundRef)}
-                  className="inline-block px-6 py-2 text-white rounded transition-colors"
-                  style={{ 
-                    fontFamily: '"Rajdhani", sans-serif',
-                    backgroundColor: colors.medium
-                  }}
-                >
-                  READ PAPER
-                </a>
+                {pub.link && (
+                  <a
+                    href={pub.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => playSound(clickSoundRef)}
+                    className="inline-block px-6 py-2 text-white rounded transition-colors"
+                    style={{
+                      fontFamily: '"Rajdhani", sans-serif',
+                      backgroundColor: colors.medium
+                    }}
+                  >
+                    {pub.linkLabel || 'READ PAPER'}
+                  </a>
+                )}
               </div>
             ))}
           </div>
@@ -1485,25 +1533,25 @@ function ProjectsPage({ playSound, clickSoundRef, colors }) {
  }, []);
   const projects = [
     {
-      title: 'Apnea Detector',
-      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
-      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
-      link: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
-      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4'
+      title: 'Point Cloud Inspection API',
+      description: 'Unsupervised 3D defect detection for manufacturing QA: FPFH descriptors matched against a memory bank of defect-free scans via FAISS, no labelled defects needed. 0.90 mean pixel AUROC across 10 MVTec 3D-AD categories, served with FastAPI in Docker.',
+      tech: ['Python', 'Open3D', 'FAISS', 'FastAPI', 'Docker'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/pointcloud-inspection-api',
+      demo: 'https://pcinspect-727953311125.asia-northeast1.run.app/demo'
     },
     {
-      title: 'E-commerce App for ASUS',
-      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
-      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
-      link: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
-      demo: null
+      title: 'Real-Time Detection & Tracking',
+      description: 'YOLO11 + ByteTrack pipeline for multi-object tracking, exported to PyTorch / ONNX / TensorRT with a measured CPU vs. GPU latency benchmark, plus a per-worker PPE (hardhat/vest) compliance demo.',
+      tech: ['YOLO11', 'ByteTrack', 'ONNX', 'TensorRT', 'FastAPI', 'Docker'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/realtime-detection-tracking',
+      demo: 'https://dtrack-727953311125.asia-northeast1.run.app/demo'
     },
     {
-      title: 'Full Stack IoT Application',
-      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
-      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
-      link: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
-      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P'
+      title: 'Bicol Cacao Field Tools',
+      description: 'Drip-irrigation pressure planner, P&ID water-system schematic, and Raspberry Pi controller design for smallholder cacao farms in Bicol, Philippines, built from field research with Team BEE, University of Tsukuba.',
+      tech: ['Raspberry Pi', 'P&ID Design', 'Field Research', 'JavaScript'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/cacao-bicol-field-tools',
+      demo: 'https://cacao-bicol-field-tools.netlify.app'
     }
   ];
 

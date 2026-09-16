@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Github, Linkedin, Twitter, Facebook, Instagram, MessageCircle, ExternalLink, ChevronDown, ArrowRight, Code, BookOpen, Briefcase, User, X, Menu } from 'lucide-react';
+import { Mail, Github, Linkedin, Twitter, Facebook, Instagram, MessageCircle, ExternalLink, ChevronDown, ArrowRight, Code, BookOpen, Briefcase, User, X, Menu, Download } from 'lucide-react';
 
 export default function ModernPortfolio() {
   const [currentSection, setCurrentSection] = useState('home');
@@ -83,6 +83,9 @@ export default function ModernPortfolio() {
 
       {/* Expertise Cards Section */}
       <ExpertiseSection />
+
+      {/* Research Section */}
+      <ResearchSection />
 
       {/* Projects Section */}
       <ProjectsSection activeProject={activeProject} setActiveProject={setActiveProject} />
@@ -233,6 +236,14 @@ function Navigation({ currentSection, scrollToSection, isMenuOpen, setIsMenuOpen
               )}
             </button>
           ))}
+          <a
+            href="/Chowdhury_Abdulla_Nasir_CV.pdf"
+            download="Chowdhury_Abdulla_Nasir_CV.pdf"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-300 hover:text-cyan-400 transition-all duration-300"
+          >
+            <Download size={14} />
+            CV
+          </a>
         </div>
       </nav>
 
@@ -263,6 +274,14 @@ function Navigation({ currentSection, scrollToSection, isMenuOpen, setIsMenuOpen
               {item.label}
             </button>
           ))}
+          <a
+            href="/Chowdhury_Abdulla_Nasir_CV.pdf"
+            download="Chowdhury_Abdulla_Nasir_CV.pdf"
+            className="flex items-center gap-2 text-2xl font-semibold text-gray-300 hover:text-cyan-400 transition-colors"
+          >
+            <Download size={22} />
+            CV
+          </a>
         </div>
       </div>
     </>
@@ -311,7 +330,7 @@ function HeroSection({ scrollToSection }) {
 
         {/* Subtitle */}
         <p className="text-xl md:text-2xl text-gray-400 mb-4 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-          Research Student @ CVLab
+          M1 Student @ CVLab
         </p>
         <p className="text-lg md:text-xl text-gray-500 mb-12 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
           University of Tsukuba, Japan
@@ -367,8 +386,9 @@ function AboutSection() {
           {/* Left: Bio */}
           <div className="space-y-6">
             <p className="text-lg text-gray-300 leading-relaxed">
-              I am a research student at the Computer Vision Lab (CVLab) at the University of Tsukuba, Japan. 
-              My research focuses on cutting-edge computer vision and deep learning applications.
+              I am an M1 student at the Computer Vision Lab (CVLab) at the University of Tsukuba, Japan,
+              advised by Prof. Kazuhiro Fukui. My research focuses on subspace representation methods for
+              3D point cloud inspection and statistical robustness of point cloud classifiers.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed">
               Every project is a testament to discipline, and every paper is a testament to mastery. 
@@ -382,10 +402,10 @@ function AboutSection() {
             
             <div className="space-y-4">
               {[
-                { category: 'Frontend', skills: ['React', 'Vue', 'Next.js', 'Tailwind CSS'] },
-                { category: 'Backend', skills: ['Node.js', 'Python', 'Firebase', 'REST API'] },
-                { category: 'AI/ML', skills: ['PyTorch', 'TensorFlow', 'OpenCV', 'HuggingFace'] },
-                { category: 'Tools', skills: ['Git', 'Docker', 'AWS', 'Arduino'] },
+                { category: 'ML / Computer Vision', skills: ['PyTorch', 'scikit-learn', 'Open3D', 'FAISS', 'OpenCV'] },
+                { category: 'GenAI / LLM', skills: ['LangChain', 'OpenAI API', 'Hugging Face'] },
+                { category: 'Languages', skills: ['Python', 'C/C++', 'MATLAB'] },
+                { category: 'Systems & Tools', skills: ['FastAPI', 'Docker', 'Git', 'Linux'] },
               ].map((item, index) => (
                 <div key={index} className="glass-morphism rounded-lg p-4 hover-glow transition-all">
                   <h4 className="text-lg font-semibold text-purple-400 mb-2">{item.category}</h4>
@@ -492,18 +512,28 @@ function ExpertiseSection() {
 function ResearchSection() {
   const publications = [
     {
-      title: 'Code Poisoning Through Misleading Comments',
-      subtitle: 'Jailbreaking LLMs via Contextual Deception',
-      authors: 'C.A. Nasir, et al.',
-      venue: '2025 ICCIT',
-      abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments.',
-      link: 'https://www.researchgate.net/publication/400360433',
-      tags: ['Machine Learning', 'Security', 'LLMs']
+      title: 'Subspace Representation for Point Cloud Surface Inspection',
+      subtitle: 'Under Synthetic-to-Real Domain Shift',
+      authors: 'A.N. Chowdhury, et al.',
+      venue: 'ACCV 2026 (submission)',
+      abstract: 'Subspace classifiers tested for robustness under synthetic-to-real domain shift on point cloud surface inspection across four fuselage scans and 597 annotated Real3D-AD objects.',
+      link: null,
+      tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
+    },
+    {
+      title: 'Do We Still Need Rotation-Invariant Architectures?',
+      subtitle: 'A Statistical Robustness Benchmark for Point Cloud Classification',
+      authors: 'A.N. Chowdhury, et al.',
+      venue: 'WACV 2027, Datasets Track (submission)',
+      abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion, isolating the rotation-invariance vs. noise-robustness trade-off.',
+      link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
+      linkLabel: 'View Demo',
+      tags: ['Computer Vision', 'Statistics', 'Robustness']
     },
     {
       title: 'Real-Time GPS and PTS Architecture',
       subtitle: 'Prototype and Simulation',
-      authors: 'C.A. Nasir, et al.',
+      authors: 'A.N. Chowdhury, et al.',
       venue: '2025 QPAIN',
       abstract: 'Explores the creation of a real-time Global Positioning System (GPS) and Passenger Tracking System (PTS).',
       link: 'https://ieeexplore.ieee.org/document/11172005',
@@ -579,15 +609,21 @@ function ResearchSection() {
                   <p className="text-sm text-gray-400 mb-1">{pub.authors}</p>
                   <p className="text-sm text-gray-500 italic">{pub.venue}</p>
                 </div>
-                <a
-                  href={pub.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
-                >
-                  View Paper
-                  <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                </a>
+                {pub.link ? (
+                  <a
+                    href={pub.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
+                  >
+                    {pub.linkLabel || 'View Paper'}
+                    <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                ) : (
+                  <span className="px-6 py-2 bg-slate-800 text-gray-400 rounded-lg font-semibold whitespace-nowrap">
+                    Under Review
+                  </span>
+                )}
               </div>
               <p className="text-gray-300 mb-4">{pub.abstract}</p>
               <div className="flex flex-wrap gap-2">
@@ -611,27 +647,27 @@ function ResearchSection() {
 function ProjectsSection({ activeProject, setActiveProject }) {
   const projects = [
     {
-      title: 'Apnea Detector',
-      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
-      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
-      github: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
-      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4',
+      title: 'Point Cloud Inspection API',
+      description: 'Unsupervised 3D defect detection for manufacturing QA: FPFH descriptors matched against a memory bank of defect-free scans via FAISS, no labelled defects needed. 0.90 mean pixel AUROC across 10 MVTec 3D-AD categories.',
+      tech: ['Python', 'Open3D', 'FAISS', 'FastAPI', 'Docker'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/pointcloud-inspection-api',
+      demo: 'https://pcinspect-727953311125.asia-northeast1.run.app/demo',
       gradient: 'from-cyan-500 to-blue-500'
     },
     {
-      title: 'E-commerce App for ASUS',
-      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
-      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
-      github: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
-      demo: null,
+      title: 'Real-Time Detection & Tracking',
+      description: 'YOLO11 + ByteTrack pipeline for multi-object tracking, exported to PyTorch / ONNX / TensorRT with a measured CPU vs. GPU latency benchmark, plus a per-worker PPE compliance demo.',
+      tech: ['YOLO11', 'ByteTrack', 'ONNX', 'TensorRT', 'FastAPI', 'Docker'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/realtime-detection-tracking',
+      demo: 'https://dtrack-727953311125.asia-northeast1.run.app/demo',
       gradient: 'from-purple-500 to-pink-500'
     },
     {
-      title: 'Full Stack IoT Application',
-      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
-      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
-      github: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
-      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P',
+      title: 'Bicol Cacao Field Tools',
+      description: 'Drip-irrigation pressure planner, P&ID water-system schematic, and Raspberry Pi controller design for smallholder cacao farms in Bicol, Philippines, built from field research with Team BEE, University of Tsukuba.',
+      tech: ['Raspberry Pi', 'P&ID Design', 'Field Research', 'JavaScript'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/cacao-bicol-field-tools',
+      demo: 'https://cacao-bicol-field-tools.netlify.app',
       gradient: 'from-blue-500 to-purple-500'
     }
   ];
