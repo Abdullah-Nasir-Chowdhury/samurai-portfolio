@@ -707,6 +707,30 @@ function ProjectsSection({ activeProject, setActiveProject }) {
       github: 'https://github.com/Abdullah-Nasir-Chowdhury/cacao-bicol-field-tools',
       demo: 'https://cacao-bicol-field-tools.netlify.app',
       gradient: 'from-blue-500 to-purple-500'
+    },
+    {
+      title: 'Apnea Detector',
+      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
+      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
+      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4',
+      gradient: 'from-cyan-500 to-blue-500'
+    },
+    {
+      title: 'E-commerce App for ASUS',
+      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
+      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
+      demo: null,
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    {
+      title: 'Full Stack IoT Application',
+      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
+      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
+      github: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
+      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P',
+      gradient: 'from-blue-500 to-purple-500'
     }
   ];
 

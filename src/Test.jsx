@@ -1193,7 +1193,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
           onClick={() => playSound(clickSoundRef)}
           className="cv-download-btn group relative inline-flex items-center gap-4 px-9 py-4 rounded-full transition-transform duration-300 hover:scale-105"
           style={{
-            background: `linear-gradient(135deg, ${colors.bgGlassLight}, ${colors.bgGlassDark})`,
             border: `1px solid ${colors.borderLightColor}`,
             boxShadow: `0 0 25px ${colors.shadowColor}`,
           }}
@@ -1711,6 +1710,27 @@ function ProjectsPage({ playSound, clickSoundRef, colors }) {
       tech: ['Raspberry Pi', 'P&ID Design', 'Field Research', 'JavaScript'],
       link: 'https://github.com/Abdullah-Nasir-Chowdhury/cacao-bicol-field-tools',
       demo: 'https://cacao-bicol-field-tools.netlify.app'
+    },
+    {
+      title: 'Apnea Detector',
+      description: 'A web application that utilizes deep learning to detect sleep apnea from audio recordings, providing real-time analysis and feedback.',
+      tech: ['HuggingFace', 'Gradio', 'Python', 'Deep Learning'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/Apnea-Detector',
+      demo: 'https://youtu.be/G2h5vp80e2s?si=A4XVePqcFST4Tzj4'
+    },
+    {
+      title: 'E-commerce App for ASUS',
+      description: 'A comprehensive e-commerce application built for ASUS, featuring product listings, user authentication, and payment integration.',
+      tech: ['Python', 'Flutter', 'Firebase', 'Dart', 'REST API'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/asus-ecommerce-app',
+      demo: null
+    },
+    {
+      title: 'Full Stack IoT Application',
+      description: 'An IoT application integrating ESP8266 with Flutter frontend and Firebase backend for real-time data monitoring and control.',
+      tech: ['Flutter', 'Firebase', 'ArduinoIDE', 'ESP8266', 'C++'],
+      link: 'https://github.com/Abdullah-Nasir-Chowdhury/IOT-Application_ESP8266-Flutter-Firebase',
+      demo: 'https://youtu.be/JxMownOBc4A?si=eMhQRYxraM1b2t7P'
     }
   ];
 
