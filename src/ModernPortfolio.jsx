@@ -1,5 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Github, Linkedin, Twitter, Facebook, Instagram, MessageCircle, ExternalLink, ChevronDown, ArrowRight, Code, BookOpen, Briefcase, User, X, Menu, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Mail, Github, Linkedin, Twitter, Facebook, Instagram, MessageCircle, ExternalLink, ChevronDown, ArrowRight, Code, BookOpen, Briefcase, User, X, Menu, Download, ArrowLeft } from 'lucide-react';
+
+function BackToHomeButton() {
+  const navigate = useNavigate();
+  return (
+    <button
+      onClick={() => navigate('/')}
+      aria-label="Back to home"
+      title="Back to home"
+      className="back-home-fab fixed top-6 left-6 z-[60] w-16 h-16 rounded-full flex items-center justify-center"
+      style={{
+        background: 'linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%)',
+        boxShadow: '0 4px 20px rgba(139, 92, 246, 0.6), 0 0 0 4px rgba(255,255,255,0.08)',
+      }}
+    >
+      <ArrowLeft size={28} color="white" strokeWidth={2.5} />
+    </button>
+  );
+}
 
 export default function ModernPortfolio() {
   const [currentSection, setCurrentSection] = useState('home');
@@ -39,6 +58,8 @@ export default function ModernPortfolio() {
 
   return (
     <div className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white min-h-screen overflow-x-hidden">
+      <BackToHomeButton />
+
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-slate-800 z-50">
         <div 
@@ -202,6 +223,23 @@ export default function ModernPortfolio() {
           .section-padding {
             padding: 8rem 3rem;
           }
+        }
+
+        @keyframes fabBounce {
+          0%, 100% { transform: translateY(0); }
+          25% { transform: translateY(-14px); }
+          50% { transform: translateY(0); }
+          75% { transform: translateY(-7px); }
+        }
+
+        .back-home-fab {
+          animation: fabBounce 0.9s ease-in-out 3;
+          transition: transform 0.2s ease-out;
+        }
+
+        .back-home-fab:hover {
+          animation: none;
+          transform: scale(1.12);
         }
       `}</style>
     </div>
@@ -429,21 +467,21 @@ function AboutSection() {
 function ExpertiseSection() {
   const expertise = [
     {
-      title: '剣術',
+      title: 'フロントエンド',
       subtitle: 'Frontend Mastery',
       desc: 'React, Vue, Next.js',
       gradient: 'from-cyan-500 to-blue-500',
       icon: '⚡'
     },
     {
-      title: '忍術',
+      title: 'バックエンド',
       subtitle: 'Backend Arts',
       desc: 'Node, Python, Databases',
       gradient: 'from-purple-500 to-pink-500',
       icon: '🔧'
     },
     {
-      title: '武道',
+      title: 'デザイン',
       subtitle: 'Design Philosophy',
       desc: 'UI/UX, Responsive Design',
       gradient: 'from-blue-500 to-cyan-500',

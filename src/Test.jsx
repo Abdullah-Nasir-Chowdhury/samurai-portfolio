@@ -472,6 +472,18 @@ const playSound = async (soundRef) => {
           animation: fadeIn 0.6s ease-out forwards;
         }
 
+        @keyframes burstFly {
+          0% { transform: translate(0, 0) scale(0.3) rotate(0deg); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translate(var(--dx), var(--dy)) scale(0.7) rotate(30deg); opacity: 0; }
+        }
+
+        .interest-burst-butterfly {
+          animation-name: burstFly;
+          animation-timing-function: ease-out;
+          animation-fill-mode: forwards;
+        }
+
         @keyframes butterflyFly1 {
           0% {
             transform: translate(-100px, -100px) rotate(0deg);
@@ -1152,10 +1164,9 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         }}
       >
         {[
-          { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
-          // { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
-          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
-          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
+          { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
+          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
+          { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
         ].map((skill, i) => (
           <div 
             key={i}
@@ -1225,8 +1236,72 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
 }
 
 // Research Page Component
+const RESEARCH_INTERESTS = ['Computer Vision', '3D Point Cloud Processing', 'Subspace Methods', 'Statistical Modeling'];
+
+const INTEREST_TAG_MAP = {
+  'Computer Vision': ['Computer Vision'],
+  '3D Point Cloud Processing': ['3D Point Clouds'],
+  'Subspace Methods': ['Subspace Methods'],
+  'Statistical Modeling': ['Statistics'],
+};
+
+function InterestBurst({ x, y }) {
+  const butterflies = [0, 1, 2, 3, 4, 5].map((i) => {
+    const angle = (i * 60 + (Math.random() * 30 - 15)) * (Math.PI / 180);
+    const distance = 40 + Math.random() * 35;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance - 20;
+    const duration = 0.5 + Math.random() * 0.25;
+    return { id: i, dx, dy, duration, delay: Math.random() * 0.08 };
+  });
+
+  return (
+    <div className="fixed pointer-events-none z-[70]" style={{ left: x, top: y }}>
+      {butterflies.map((b) => (
+        <div
+          key={b.id}
+          className="interest-burst-butterfly absolute"
+          style={{
+            '--dx': `${b.dx}px`,
+            '--dy': `${b.dy}px`,
+            animationDuration: `${b.duration}s`,
+            animationDelay: `${b.delay}s`,
+          }}
+        >
+          <svg width="14" height="18" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 20C15 20 2 10 2 20C2 30 8 38 15 38C22 38 28 30 28 20C28 10 15 20 15 20Z"
+                  fill="url(#burstWingGradient)" stroke="#7f1d1d" strokeWidth="0.75" />
+            <line x1="15" y1="6" x2="15" y2="24" stroke="#450a0a" strokeWidth="1.5" strokeLinecap="round" />
+            <defs>
+              <linearGradient id="burstWingGradient" x1="2" y1="10" x2="28" y2="38">
+                <stop offset="0%" stopColor="#fca5a5" />
+                <stop offset="50%" stopColor="#ef4444" />
+                <stop offset="100%" stopColor="#b91c1c" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ResearchPage({ playSound, clickSoundRef, colors }) {
   const [showButterflies, setShowButterflies] = useState(true);
+  const [activeInterest, setActiveInterest] = useState(null);
+  const [bursts, setBursts] = useState([]);
+
+  const handleInterestClick = (interest, event) => {
+    playSound(clickSoundRef);
+    const x = event.clientX;
+    const y = event.clientY;
+    const burstId = Date.now() + Math.random();
+    setBursts((prev) => [...prev, { id: burstId, x, y }]);
+    setTimeout(() => {
+      setBursts((prev) => prev.filter((b) => b.id !== burstId));
+    }, 900);
+    setActiveInterest((prev) => (prev === interest ? null : interest));
+  };
 
   useEffect(() => {
     setShowButterflies(true);
@@ -1297,6 +1372,10 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
     },
   ];
 
+  const visiblePublications = activeInterest
+    ? publications.filter((pub) => pub.tags.some((t) => INTEREST_TAG_MAP[activeInterest]?.includes(t)))
+    : publications;
+
   const profiles = [
     {
       name: 'Google Scholar',
@@ -1321,12 +1400,13 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
   return (
     <div className="min-h-screen px-6 py-24">
       {showButterflies && <MultipleButterflies colors={colors} />}
-      
+      {bursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} />)}
+
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16 fade-in">
-          <h1 
+          <h1
             className="kanji-title text-5xl md:text-6xl font-bold mb-4"
-            style={{ 
+            style={{
               fontFamily: '"Cinzel", serif',
               textShadow: `0 0 20px ${colors.shadowColor}`,
               color: colors.textLighterColor
@@ -1404,38 +1484,51 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
           >
             RESEARCH INTERESTS
           </h2>
+          <p className="text-gray-500 text-sm mb-4" style={{ fontFamily: '"Rajdhani", sans-serif' }}>
+            Tap an interest to filter the publications below. Tap it again to show all.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {['Computer Vision', '3D Point Cloud Processing', 'Subspace Methods', 'Statistical Robustness Analysis'].map((interest, i) => (
-              <div 
-                key={i} 
-                className="p-4 rounded-lg bg-black/40 backdrop-blur-sm"
-                style={{ border: `1px solid ${colors.borderColor}` }}
-              >
-                <p 
-                  style={{ 
-                    fontFamily: '"Rajdhani", sans-serif',
-                    color: colors.textLightColor
+            {RESEARCH_INTERESTS.map((interest, i) => {
+              const isActive = activeInterest === interest;
+              return (
+                <button
+                  key={i}
+                  onClick={(e) => handleInterestClick(interest, e)}
+                  className="p-4 rounded-lg bg-black/40 backdrop-blur-sm text-left transition-all duration-300"
+                  style={{
+                    border: `1px solid ${isActive ? '#ef4444' : colors.borderColor}`,
+                    backgroundColor: isActive ? 'rgba(239, 68, 68, 0.18)' : undefined,
+                    boxShadow: isActive ? '0 0 22px rgba(239, 68, 68, 0.55)' : 'none',
+                    transform: isActive ? 'scale(1.03)' : 'scale(1)',
                   }}
                 >
-                  {interest}
-                </p>
-              </div>
-            ))}
+                  <p
+                    style={{
+                      fontFamily: '"Rajdhani", sans-serif',
+                      color: isActive ? '#fca5a5' : colors.textLightColor,
+                      fontWeight: isActive ? 700 : 400,
+                    }}
+                  >
+                    {interest}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="fade-in" style={{ animationDelay: '0.4s' }}>
-          <h2 
-            className="text-2xl font-bold mb-6" 
-            style={{ 
+          <h2
+            className="text-2xl font-bold mb-6"
+            style={{
               fontFamily: '"Rajdhani", sans-serif',
               color: colors.textColor
             }}
           >
-            PUBLICATIONS
+            PUBLICATIONS {activeInterest && <span className="text-base font-normal text-red-400">— filtered by {activeInterest}</span>}
           </h2>
           <div className="space-y-6">
-            {publications.map((pub, i) => (
+            {visiblePublications.map((pub, i) => (
               <div 
                 key={i}
                 className="p-6 rounded-lg bg-black/40 backdrop-blur-sm transition-all duration-300"
