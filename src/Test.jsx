@@ -427,7 +427,7 @@ const playSound = async (soundRef) => {
 
       {/* Inline Styles for Animations */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;600;700&family=Noto+Serif+JP:wght@400;700&family=Yuji+Syuku&display=swap');
         
         @media (hover: hover) and (pointer: fine) {
           * {
@@ -482,6 +482,20 @@ const playSound = async (soundRef) => {
           animation-name: burstFly;
           animation-timing-function: ease-out;
           animation-fill-mode: forwards;
+        }
+
+        @keyframes cvGlowPulse {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.18); }
+        }
+
+        .cv-download-btn {
+          animation: cvGlowPulse 3s ease-in-out infinite;
+        }
+
+        .cv-download-btn:hover {
+          animation: none;
+          filter: brightness(1.25);
         }
 
         @keyframes butterflyFly1 {
@@ -920,7 +934,16 @@ function MultipleButterflies({ colors }) {
 function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
+  const [cardBursts, setCardBursts] = useState([]);
   const navigate = useNavigate();
+
+  const spawnCardBurst = (event) => {
+    const burstId = Date.now() + Math.random();
+    setCardBursts((prev) => [...prev, { id: burstId, x: event.clientX, y: event.clientY }]);
+    setTimeout(() => {
+      setCardBursts((prev) => prev.filter((b) => b.id !== burstId));
+    }, 900);
+  };
 
   // FIXED: Simple navigation function using window.location
   const handleNavigateToModern = () => {
@@ -981,8 +1004,9 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies colors={colors} />}
-      
-      <div 
+      {cardBursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} />)}
+
+      <div
         className="w-full max-w-4xl mb-12 transition-all duration-1000"
         style={{
           opacity: isLoaded ? 1 : 0,
@@ -1155,7 +1179,46 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         </p>
       </div>
 
-      <div 
+      <div
+        className="mb-12 transition-all duration-1000"
+        style={{
+          opacity: isLoaded ? 1 : 0,
+          transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+          transitionDelay: '1100ms'
+        }}
+      >
+        <a
+          href="/Chowdhury_Abdulla_Nasir_CV.pdf"
+          download="Chowdhury_Abdulla_Nasir_CV.pdf"
+          onClick={() => playSound(clickSoundRef)}
+          className="cv-download-btn group relative inline-flex items-center gap-4 px-9 py-4 rounded-full transition-transform duration-300 hover:scale-105"
+          style={{
+            background: `linear-gradient(135deg, ${colors.bgGlassLight}, ${colors.bgGlassDark})`,
+            border: `1px solid ${colors.borderLightColor}`,
+            boxShadow: `0 0 25px ${colors.shadowColor}`,
+          }}
+        >
+          <span
+            className="text-3xl leading-none"
+            style={{ fontFamily: '"Yuji Syuku", serif', color: colors.lighter }}
+          >
+            書
+          </span>
+          <span
+            className="text-base font-semibold tracking-[0.2em] uppercase"
+            style={{ fontFamily: '"Rajdhani", sans-serif', color: colors.textLighterColor }}
+          >
+            Download CV
+          </span>
+          <Download
+            size={20}
+            style={{ color: colors.textColor }}
+            className="transition-transform duration-300 group-hover:translate-y-1"
+          />
+        </a>
+      </div>
+
+      <div
         className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mb-12 transition-all duration-1000"
         style={{
           opacity: isLoaded ? 1 : 0,
@@ -1168,10 +1231,13 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
           { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
           { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
         ].map((skill, i) => (
-          <div 
+          <div
             key={i}
             className="relative group"
-            onClick={skill.action}
+            onClick={(e) => {
+              spawnCardBurst(e);
+              if (skill.action) skill.action();
+            }}
             style={{ cursor: skill.action ? 'pointer' : 'default' }}
           >
             <div 
@@ -1187,10 +1253,10 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
                 border: `1px solid ${colors.borderColor}`
               }}
             >
-              <h3 
-                className="text-3xl mb-2" 
-                style={{ 
-                  fontFamily: '"Noto Serif JP", serif',
+              <h3
+                className="text-4xl mb-2"
+                style={{
+                  fontFamily: '"Yuji Syuku", "Noto Serif JP", serif',
                   color: colors.textColor
                 }}
               >
