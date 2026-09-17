@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import SamuraiPortfolio from './SamuraiPortfolio';
 import SamuraiPortfolio from './Test';
-import ModernPortfolio from './modernportfolio';
+import ModernPortfolio from './ModernPortfolio';
 import BlogPlatform from './blog';
 
 function App() {
