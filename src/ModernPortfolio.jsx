@@ -595,6 +595,15 @@ function ResearchSection() {
       link: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning', 'OCR']
     },
+    {
+      title: 'Code Poisoning Through Misleading Comments',
+      subtitle: 'Jailbreaking LLMs via Contextual Deception',
+      authors: 'A.A. Sami, G. Debnath, R. Dey, A.N. Chowdhury',
+      venue: '2025 ICCIT',
+      abstract: 'Investigates the vulnerability of large language models to code poisoning attacks through misleading comments embedded in code snippets.',
+      link: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
+      tags: ['Machine Learning', 'Security', 'LLMs']
+    },
   ];
 
   const profiles = [
