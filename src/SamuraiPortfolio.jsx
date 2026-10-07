@@ -1156,9 +1156,9 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         }}
       >
         {[
-          { title: '剣術', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
-          { title: '忍術', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
-          { title: '武道', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: null }
+          { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
+          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleImageChange },
+          { title: 'ソフトウェア設計', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: null }
         ].map((skill, i) => (
           <div 
             key={i}
