@@ -366,7 +366,6 @@ export default function BlogPlatform() {
           background: 'rgba(10, 14, 39, 0.6)',
           backdropFilter: 'blur(10px)',
           borderRadius: '20px',
-          padding: '25px 35px',
           marginTop: '20px'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
