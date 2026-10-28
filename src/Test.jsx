@@ -1392,8 +1392,8 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
     {
       title: 'Subspace Representation for Point Cloud Surface Inspection under Synthetic-to-Real Domain Shift',
       authors: 'A.N. Chowdhury, et al.',
-      venue: 'ACCV 2026 (submission)',
-      status: 'Under Review',
+      venue: 'ACCV 2026',
+      status: 'Accepted',
       abstract: 'We test subspace classifiers for robustness to synthetic-to-real domain shift on point cloud surface inspection: an end-to-end U-Net, PointNet++, a nearest-subspace rule on frozen features, and training-free shape subspaces, evaluated on four fuselage scans and 597 annotated Real3D-AD objects. The nearest-subspace margin is the only decision rule whose operating point survives the real feature shift.',
       link: null,
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
@@ -1401,8 +1401,8 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
     {
       title: 'Do We Still Need Rotation-Invariant Architectures? A Statistical Robustness Benchmark for Point Cloud Classification',
       authors: 'A.N. Chowdhury, et al.',
-      venue: 'WACV 2027, Datasets Track (submission)',
-      status: 'Under Review',
+      venue: 'WACV 2027, Datasets Track',
+      status: 'Accepted',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion. Rotation-invariant architectures achieve the best pose robustness but rank among the lowest on noise robustness, a statistically significant trade-off; a simple invariance loss narrows this gap on unseen corruptions without transferring across corruption families.',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'VIEW INTERACTIVE DEMO',
@@ -1625,9 +1625,9 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                     <span
                       className="shrink-0 px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap"
                       style={{
-                        backgroundColor: pub.status === 'Published' ? `${colors.rgbaColor}0.25)` : 'rgba(107,114,128,0.25)',
-                        color: pub.status === 'Published' ? colors.textLightColor : '#d1d5db',
-                        border: `1px solid ${pub.status === 'Published' ? colors.borderMediumColor : '#6b7280'}`
+                        backgroundColor: pub.status !== 'Under Review' ? `${colors.rgbaColor}0.25)` : 'rgba(107,114,128,0.25)',
+                        color: pub.status !== 'Under Review' ? colors.textLightColor : '#d1d5db',
+                        border: `1px solid ${pub.status !== 'Under Review' ? colors.borderMediumColor : '#6b7280'}`
                       }}
                     >
                       {pub.status.toUpperCase()}

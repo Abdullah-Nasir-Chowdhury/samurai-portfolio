@@ -553,7 +553,7 @@ function ResearchSection() {
       title: 'Subspace Representation for Point Cloud Surface Inspection',
       subtitle: 'Under Synthetic-to-Real Domain Shift',
       authors: 'A.N. Chowdhury, et al.',
-      venue: 'ACCV 2026 (submission)',
+      venue: 'ACCV 2026 (accepted)',
       abstract: 'Subspace classifiers tested for robustness under synthetic-to-real domain shift on point cloud surface inspection across four fuselage scans and 597 annotated Real3D-AD objects.',
       link: null,
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
@@ -562,7 +562,7 @@ function ResearchSection() {
       title: 'Do We Still Need Rotation-Invariant Architectures?',
       subtitle: 'A Statistical Robustness Benchmark for Point Cloud Classification',
       authors: 'A.N. Chowdhury, et al.',
-      venue: 'WACV 2027, Datasets Track (submission)',
+      venue: 'WACV 2027, Datasets Track (accepted)',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion, isolating the rotation-invariance vs. noise-robustness trade-off.',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'View Demo',
@@ -668,7 +668,7 @@ function ResearchSection() {
                   </a>
                 ) : (
                   <span className="px-6 py-2 bg-slate-800 text-gray-400 rounded-lg font-semibold whitespace-nowrap">
-                    Under Review
+                    Accepted
                   </span>
                 )}
               </div>
