@@ -1085,7 +1085,7 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
  const elementConfig = {
    fire: { Icon: Flame, motion: 'flicker', pace: [0.5, 0.5], outerSpin: '20s', innerSpin: '15s' },
    water: { Icon: Droplet, motion: 'drip', pace: [1.2, 0.8], outerSpin: '32s', innerSpin: '26s' },
-   wind: { Icon: Wind, motion: 'gust', pace: [0.8, 0.6], outerSpin: '8s', innerSpin: '6s' },
+   wind: { Icon: Wind, motion: 'gust', pace: [2.2, 1.2], outerSpin: '30s', innerSpin: '24s' },
    earth: { Icon: Mountain, motion: 'rumble', pace: [1.8, 1.0], outerSpin: '60s', innerSpin: '45s' },
  };
  const ring = elementConfig[element];
