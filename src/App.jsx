@@ -10,6 +10,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<SamuraiPortfolio />} />
+        {/* Same home page; the separate path lets analytics count visits from the Instagram bio link */}
+        <Route path="/ig" element={<SamuraiPortfolio />} />
         <Route path="/modern" element={<ModernPortfolio />} />
         <Route path="/blog" element={<BlogPlatform />} />
       </Routes>
