@@ -93,7 +93,7 @@ export default function SamuraiPortfolio() {
   const [isMuted, setIsMuted] = useState(false);
   const [theme, setTheme] = useState(0); // mood index (0-2) within the current element
   const [element, setElement] = useState('fire'); // 'fire', 'water', 'wind', or 'earth'
-  const [profileImage, setProfileImage] = useState('/a.jpg');
+  const [profileImage, setProfileImage] = useState('/frontend/01-office-selfie.jpg');
   
 // Audio refs
 const bgMusicRef = useRef(null);
