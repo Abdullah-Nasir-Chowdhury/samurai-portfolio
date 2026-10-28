@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import OmikujiModal from './Omikuji';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 const hexToRgb = (hex) => {
@@ -789,7 +791,7 @@ function CustomCursor({ colors }) {
   return (
     <>
       <div
-        className="fixed pointer-events-none z-50 mix-blend-difference"
+        className="fixed pointer-events-none z-[100] mix-blend-difference"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -808,7 +810,7 @@ function CustomCursor({ colors }) {
       </div>
 
       <div
-        className="fixed pointer-events-none z-50"
+        className="fixed pointer-events-none z-[100]"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -1043,6 +1045,19 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
     navigate('/blog');
   };
 
+  // Backend depends on the element: fire opens the omikuji draw, the rest still go to the blog
+  const [showOmikuji, setShowOmikuji] = useState(false);
+  const closeOmikuji = useCallback(() => setShowOmikuji(false), []);
+
+  const handleBackend = () => {
+    if (element === 'fire') {
+      playSound(clickSoundRef);
+      setShowOmikuji(true);
+    } else {
+      handleNavigateToBlog();
+    }
+  };
+
   useEffect(() => {
     setIsLoaded(true);
     setShowButterflies(true);
@@ -1123,6 +1138,10 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies colors={colors} />}
       {cardBursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} colors={colors} />)}
+      {showOmikuji && createPortal(
+        <OmikujiModal colors={colors} playSound={playSound} onClose={closeOmikuji} />,
+        document.body
+      )}
 
       <div
         className="w-full max-w-4xl mb-12 transition-all duration-1000"
@@ -1346,7 +1365,7 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
         {[
           { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleFrontendImageChange },
           { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleElementChange },
-          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
+          { title: 'バックエンド', subtitle: 'Backend Arts', desc: element === 'fire' ? '火 · おみくじ — draw your fortune' : 'Node, Python, Databases', action: handleBackend },
         ].map((skill, i) => (
           <div
             key={i}
