@@ -2,6 +2,87 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
+const hexToRgb = (hex) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+};
+
+// Expands a handful of base colours into every key the page reads from `colors`.
+const makePalette = (p) => ({
+  primary: p.medium,
+  light: p.light,
+  lighter: p.lighter,
+  medium: p.medium,
+  dark: p.dark,
+  darker: p.darker,
+  darkest: p.darkest,
+  accent: p.accent,
+  accentDark: p.accent,
+  shadowColor: `rgba(${p.rgb}, 0.5)`,
+  particleColor: p.particle,
+  kanjiColor: p.darker,
+  cursorColor: p.particle,
+  borderColor: p.darker,
+  borderMediumColor: p.dark,
+  borderLightColor: p.medium,
+  bgColor: p.darker,
+  bgMediumColor: p.darkest,
+  bgLightColor: p.dark,
+  textColor: p.text,
+  textLightColor: p.light,
+  textLighterColor: p.lightest,
+  bgGlassLight: `rgba(${hexToRgb(p.darker)}, 0.8)`,
+  bgGlassDark: `rgba(${hexToRgb(p.darkest)}, 0.5)`,
+  rgbaColor: `rgba(${p.rgb}, `,
+  pageBg: p.bg,
+  ring: p.ring || p.accent,
+  ringRgb: hexToRgb(p.ring || p.accent),
+});
+
+// Design card picks the element, Frontend card cycles the three moods inside it
+const palettes = {
+  fire: [
+    // crimson
+    makePalette({ light: '#fecaca', lighter: '#fca5a5', medium: '#dc2626', dark: '#991b1b', darker: '#7f1d1d', darkest: '#450a0a', accent: '#f97316', particle: '#ef4444', text: '#f87171', lightest: '#fef2f2', rgb: '220, 38, 38', bg: '#000000', ring: '#ca8a04' }),
+    // ember
+    makePalette({ light: '#fed7aa', lighter: '#fdba74', medium: '#ea580c', dark: '#c2410c', darker: '#7c2d12', darkest: '#431407', accent: '#facc15', particle: '#fb923c', text: '#fb923c', lightest: '#fff7ed', rgb: '234, 88, 12', bg: '#0a0400', ring: '#ca8a04' }),
+    // ash
+    makePalette({ light: '#d6d3d1', lighter: '#a8a29e', medium: '#78716c', dark: '#57534e', darker: '#292524', darkest: '#1c1917', accent: '#f97316', particle: '#fdba74', text: '#a8a29e', lightest: '#f5f5f4', rgb: '120, 113, 108', bg: '#080706', ring: '#ca8a04' }),
+  ],
+  water: [
+    // ocean
+    makePalette({ light: '#bfdbfe', lighter: '#93c5fd', medium: '#2563eb', dark: '#1e3a8a', darker: '#1e40af', darkest: '#172554', accent: '#22d3ee', particle: '#3b82f6', text: '#60a5fa', lightest: '#eff6ff', rgb: '37, 99, 235', bg: '#01040d', ring: '#7dd3fc' }),
+    // ice
+    makePalette({ light: '#cffafe', lighter: '#a5f3fc', medium: '#06b6d4', dark: '#0e7490', darker: '#155e75', darkest: '#083344', accent: '#e0f2fe', particle: '#67e8f9', text: '#67e8f9', lightest: '#ecfeff', rgb: '6, 182, 212', bg: '#010a0d', ring: '#e0f2fe' }),
+    // abyss
+    makePalette({ light: '#c7d2fe', lighter: '#a5b4fc', medium: '#4f46e5', dark: '#3730a3', darker: '#312e81', darkest: '#1e1b4b', accent: '#2dd4bf', particle: '#5eead4', text: '#818cf8', lightest: '#eef2ff', rgb: '79, 70, 229', bg: '#02010a', ring: '#2dd4bf' }),
+  ],
+  wind: [
+    // dawn mist
+    makePalette({ light: '#e2e8f0', lighter: '#cbd5e1', medium: '#94a3b8', dark: '#475569', darker: '#334155', darkest: '#1e293b', accent: '#fda4af', particle: '#e2e8f0', text: '#cbd5e1', lightest: '#f8fafc', rgb: '148, 163, 184', bg: '#070a10', ring: '#fda4af' }),
+    // storm
+    makePalette({ light: '#ccfbf1', lighter: '#99f6e4', medium: '#14b8a6', dark: '#0f766e', darker: '#115e59', darkest: '#134e4a', accent: '#e2e8f0', particle: '#99f6e4', text: '#5eead4', lightest: '#f0fdfa', rgb: '20, 184, 166', bg: '#050b0c', ring: '#e2e8f0' }),
+    // night
+    makePalette({ light: '#d1d5db', lighter: '#9ca3af', medium: '#6b7280', dark: '#374151', darker: '#1f2937', darkest: '#111827', accent: '#a78bfa', particle: '#a78bfa', text: '#9ca3af', lightest: '#f3f4f6', rgb: '139, 92, 246', bg: '#05060a', ring: '#a78bfa' }),
+  ],
+  earth: [
+    // forest
+    makePalette({ light: '#d9f99d', lighter: '#bef264', medium: '#65a30d', dark: '#3f6212', darker: '#365314', darkest: '#1a2e05', accent: '#ca8a04', particle: '#a3e635', text: '#a3e635', lightest: '#f7fee7', rgb: '101, 163, 13', bg: '#030702', ring: '#ca8a04' }),
+    // clay
+    makePalette({ light: '#f5d0b0', lighter: '#e0a87a', medium: '#a0522d', dark: '#7c3f1d', darker: '#5c2e14', darkest: '#2e170a', accent: '#84cc16', particle: '#c2814f', text: '#d4956a', lightest: '#fdf3ea', rgb: '160, 82, 45', bg: '#070402', ring: '#ca8a04' }),
+    // stone
+    makePalette({ light: '#e7e5e4', lighter: '#d6d3d1', medium: '#a8a29e', dark: '#78716c', darker: '#44403c', darkest: '#292524', accent: '#84cc16', particle: '#a8a29e', text: '#d6d3d1', lightest: '#fafaf9', rgb: '168, 162, 158', bg: '#060505', ring: '#84cc16' }),
+  ],
+};
+
+// Background track per element; wind and earth reuse the existing tracks until they get their own
+const elementMusic = {
+  fire: '/audio/moonlight.mp3',
+  water: '/audio/idkmf.mp3',
+  wind: '/audio/moonlight.mp3',
+  earth: '/audio/idkmf.mp3',
+};
+
 export default function SamuraiPortfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
@@ -9,7 +90,7 @@ export default function SamuraiPortfolio() {
   const [currentPage, setCurrentPage] = useState('home');
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [theme, setTheme] = useState('red'); // 'red', 'blue', or 'black'
+  const [theme, setTheme] = useState(0); // mood index (0-2) within the current element
   const [element, setElement] = useState('fire'); // 'fire', 'water', 'wind', or 'earth'
   const [profileImage, setProfileImage] = useState('/a.jpg');
   
@@ -19,92 +100,7 @@ const clickSoundRef = useRef(null);
 const pageSwitchSoundRef = useRef(null);
 const [audioInitialized, setAudioInitialized] = useState(false);
 
-// Theme configuration
-const themeConfig = {
-  red: {
-    primary: '#dc2626',
-    light: '#fecaca',
-    lighter: '#fca5a5',
-    medium: '#dc2626',
-    dark: '#991b1b',
-    darker: '#7f1d1d',
-    darkest: '#450a0a',
-    accent: '#f97316',
-    accentDark: '#f97316',
-    shadowColor: 'rgba(220, 38, 38, 0.5)',
-    particleColor: '#ef4444',
-    kanjiColor: '#7f1d1d',
-    cursorColor: '#ef4444',
-    borderColor: '#7f1d1d',
-    borderMediumColor: '#991b1b',
-    borderLightColor: '#dc2626',
-    bgColor: '#7f1d1d',
-    bgMediumColor: '#450a0a',
-    bgLightColor: '#991b1b',
-    textColor: '#f87171',
-    textLightColor: '#fecaca',
-    textLighterColor: '#fef2f2',
-    bgGlassLight: 'rgba(127, 29, 29, 0.8)',
-    bgGlassDark: 'rgba(69, 10, 10, 0.5)',
-    rgbaColor: 'rgba(220, 38, 38, ',
-  },
-  blue: {
-    primary: '#1e3a8a',
-    light: '#bfdbfe',
-    lighter: '#93c5fd',
-    medium: '#2563eb',
-    dark: '#1e3a8a',
-    darker: '#1e40af',
-    darkest: '#172554',
-    accent: '#22d3ee',
-    accentDark: '#06b6d4',
-    shadowColor: 'rgba(30, 58, 138, 0.5)',
-    particleColor: '#3b82f6',
-    kanjiColor: '#1e40af',
-    cursorColor: '#3b82f6',
-    borderColor: '#1e40af',
-    borderMediumColor: '#1e3a8a',
-    borderLightColor: '#2563eb',
-    bgColor: '#1e40af',
-    bgMediumColor: '#172554',
-    bgLightColor: '#1e3a8a',
-    textColor: '#60a5fa',
-    textLightColor: '#bfdbfe',
-    textLighterColor: '#eff6ff',
-    bgGlassLight: 'rgba(30, 64, 175, 0.8)',
-    bgGlassDark: 'rgba(23, 37, 84, 0.5)',
-    rgbaColor: 'rgba(30, 58, 138, ',
-  },
-  black: {
-    primary: '#ffffff',
-    light: '#d1d5db',
-    lighter: '#9ca3af',
-    medium: '#6b7280',
-    dark: '#374151',
-    darker: '#1f2937',
-    darkest: '#111827',
-    accent: '#a78bfa',
-    accentDark: '#8b5cf6',
-    shadowColor: 'rgba(139, 92, 246, 0.5)',
-    particleColor: '#a78bfa',
-    kanjiColor: '#374151',
-    cursorColor: '#a78bfa',
-    borderColor: '#374151',
-    borderMediumColor: '#4b5563',
-    borderLightColor: '#6b7280',
-    bgColor: '#374151',
-    bgMediumColor: '#111827',
-    bgLightColor: '#4b5563',
-    textColor: '#9ca3af',
-    textLightColor: '#d1d5db',
-    textLighterColor: '#f3f4f6',
-    bgGlassLight: 'rgba(55, 65, 81, 0.8)',
-    bgGlassDark: 'rgba(17, 24, 39, 0.5)',
-    rgbaColor: 'rgba(107, 114, 128, ',
-  }
-};
-
-const colors = themeConfig[theme];
+const colors = palettes[element][theme];
 
 useEffect(() => {
   setIsLoaded(true);
@@ -119,7 +115,7 @@ useEffect(() => {
 useEffect(() => {
   const initAudio = () => {
     try {
-      bgMusicRef.current = new Audio('/audio/moonlight.mp3');
+      bgMusicRef.current = new Audio(elementMusic.fire);
       bgMusicRef.current.loop = true;
       bgMusicRef.current.volume = 0.2;
       
@@ -171,6 +167,16 @@ useEffect(() => {
     }
   };
 }, []);
+
+// Swap the background track when the element changes, carrying on if music was playing
+useEffect(() => {
+  const music = bgMusicRef.current;
+  if (!music || music.src.endsWith(elementMusic[element])) return;
+  music.src = elementMusic[element];
+  if (isMusicPlaying && !isMuted) {
+    music.play().catch((error) => console.error('Audio play failed:', error));
+  }
+}, [element, isMusicPlaying, isMuted]);
 
 // Toggle all audio (music and sound effects)
 const toggleAudio = async () => {
@@ -250,7 +256,10 @@ const playSound = async (soundRef) => {
   };
 
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden">
+    <div
+      className="relative min-h-screen overflow-hidden"
+      style={{ background: `radial-gradient(ellipse at 50% 0%, ${colors.darkest}99 0%, ${colors.pageBg} 60%)` }}
+    >
       <CustomCursor colors={colors} />
       {/* Japanese Pattern Background */}
       <div 
@@ -262,21 +271,7 @@ const playSound = async (soundRef) => {
       />
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 rounded-full opacity-20"
-            style={{
-              backgroundColor: colors.particleColor,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${10 + Math.random() * 20}s infinite ease-in-out`,
-              animationDelay: `${Math.random() * 5}s`
-            }}
-          />
-        ))}
-      </div>
+      <ElementParticles element={element} colors={colors} />
 
       {/* Parallax Background Elements */}
       <div 
@@ -459,6 +454,38 @@ const playSound = async (soundRef) => {
         @keyframes rumble {
           0% { opacity: 0.7; transform: translateY(0) scale(1); }
           100% { opacity: 1; transform: translateY(2px) scale(1.08); }
+        }
+
+        @keyframes emberRise {
+          0% { opacity: 0; transform: translate(0, 0); }
+          15% { opacity: 0.7; }
+          100% { opacity: 0; transform: translate(var(--drift), -40vh); }
+        }
+
+        @keyframes bubbleRise {
+          0% { opacity: 0; transform: translate(0, 0); }
+          15% { opacity: 0.5; }
+          35% { transform: translate(8px, -12vh); }
+          65% { transform: translate(-8px, -24vh); }
+          100% { opacity: 0; transform: translate(4px, -36vh); }
+        }
+
+        @keyframes dropFall {
+          0% { opacity: 0; transform: translateY(0); }
+          10% { opacity: 0.5; }
+          100% { opacity: 0; transform: translateY(30vh); }
+        }
+
+        @keyframes windStreak {
+          0% { opacity: 0; transform: translateX(-10vw); }
+          30% { opacity: 0.45; }
+          100% { opacity: 0; transform: translateX(40vw); }
+        }
+
+        @keyframes leafFall {
+          0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+          15% { opacity: 0.6; }
+          100% { opacity: 0; transform: translate(var(--drift), 35vh) rotate(320deg); }
         }
         
         .flame-ring-outer {
@@ -809,41 +836,14 @@ function CustomCursor({ colors }) {
 
 // Butterfly Component
 function FlyingButterfly({ animationClass, delay = 0, colors }) {
-  const getButterflyGradient = () => {
-    if (colors.primary === '#dc2626') {
-      return {
-        wingGradient: 'url(#leftWingGradient)',
-        wingColor1: '#dc2626',
-        wingColor2: '#991b1b',
-        wingColor3: '#7f1d1d',
-        bodyColor: 'from-red-800 to-red-950',
-        bodyGradient: 'rgba(220, 38, 38, 0.6)',
-        dotColor: '#450a0a'
-      };
-    } else if (colors.primary === '#1e3a8a') {
-      return {
-        wingGradient: 'url(#leftWingGradient)',
-        wingColor1: '#0369a1',
-        wingColor2: '#075985',
-        wingColor3: '#0c4a6e',
-        bodyColor: 'from-blue-800 to-blue-950',
-        bodyGradient: 'rgba(30, 58, 138, 0.6)',
-        dotColor: '#082f49'
-      };
-    } else {
-      return {
-        wingGradient: 'url(#leftWingGradient)',
-        wingColor1: '#9ca3af',
-        wingColor2: '#6b7280',
-        wingColor3: '#4b5563',
-        bodyColor: 'from-gray-700 to-gray-900',
-        bodyGradient: 'rgba(107, 114, 128, 0.6)',
-        dotColor: '#1f2937'
-      };
-    }
+  const gradient = {
+    wingGradient: 'url(#leftWingGradient)',
+    wingColor1: colors.medium,
+    wingColor2: colors.dark,
+    wingColor3: colors.darker,
+    bodyGradient: `${colors.rgbaColor}0.6)`,
+    dotColor: colors.darkest
   };
-
-  const gradient = getButterflyGradient();
 
   return (
     <div 
@@ -934,6 +934,57 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
   );
 }
 
+// Background particles: embers rise (fire), bubbles rise and drops fall (water),
+// streaks blow sideways (wind), leaves and dust drift down (earth)
+function ElementParticles({ element, colors }) {
+  // Seeded pseudo-random so the layout stays put across mouse-move re-renders
+  const seed = [...element].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const rand = (n) => {
+    const x = Math.sin(n * 12.9898 + seed) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  const specs = [...Array(30)].map((_, i) => ({
+    left: rand(i * 6 + 1) * 100,
+    top: rand(i * 6 + 2) * 100,
+    size: rand(i * 6 + 3),
+    duration: rand(i * 6 + 4),
+    delay: rand(i * 6 + 5) * 8,
+    drift: (rand(i * 6 + 6) - 0.5) * 80,
+    variant: i % 3,
+  }));
+
+  const styleFor = (p) => {
+    const base = { left: `${p.left}%`, top: `${p.top}%`, '--drift': `${p.drift}px`, animationDelay: `-${p.delay}s` };
+    if (element === 'water') {
+      if (p.variant === 2) {
+        return { ...base, width: 2, height: 7, borderRadius: '50% 50% 50% 50% / 30% 30% 70% 70%', backgroundColor: colors.particleColor, animation: `dropFall ${4 + p.duration * 4}s linear infinite` };
+      }
+      const s = 4 + p.size * 7;
+      return { ...base, width: s, height: s, borderRadius: '50%', border: `1px solid ${colors.particleColor}`, animation: `bubbleRise ${8 + p.duration * 8}s ease-in-out infinite` };
+    }
+    if (element === 'wind') {
+      return { ...base, left: `${p.left * 0.7}%`, width: 40 + p.size * 90, height: 1, background: `linear-gradient(to right, transparent, ${colors.particleColor}, transparent)`, animation: `windStreak ${3 + p.duration * 4}s ease-in-out infinite` };
+    }
+    if (element === 'earth') {
+      if (p.variant === 2) {
+        return { ...base, width: 2, height: 2, borderRadius: '50%', backgroundColor: colors.lighter, animation: `float ${10 + p.duration * 15}s ease-in-out infinite` };
+      }
+      const s = 6 + p.size * 4;
+      return { ...base, width: s, height: s, borderRadius: '0 70% 0 70%', backgroundColor: colors.particleColor, animation: `leafFall ${9 + p.duration * 7}s linear infinite` };
+    }
+    const s = 2 + p.size * 2;
+    return { ...base, width: s, height: s, borderRadius: '50%', backgroundColor: colors.particleColor, boxShadow: `0 0 6px ${colors.particleColor}`, animation: `emberRise ${6 + p.duration * 8}s ease-out infinite` };
+  };
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {specs.map((p, i) => (
+        <div key={`${element}-${i}`} className="absolute" style={styleFor(p)} />
+      ))}
+    </div>
+  );
+}
+
 function MultipleButterflies({ colors }) {
   return (
     <>
@@ -993,11 +1044,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
 
  const handleThemeChange = () => {
    playSound(clickSoundRef);
-   setTheme(prevTheme => {
-     if (prevTheme === 'red') return 'blue';
-     if (prevTheme === 'blue') return 'black';
-     return 'red';
-   });
+   setTheme(prevTheme => (prevTheme + 1) % palettes[element].length);
  };
 
  const elementOrder = ['fire', 'water', 'wind', 'earth'];
@@ -1005,15 +1052,16 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
  const handleElementChange = () => {
    playSound(clickSoundRef);
    setElement(prev => elementOrder[(elementOrder.indexOf(prev) + 1) % elementOrder.length]);
+   setTheme(0); // each element opens on its signature mood
  };
 
- // Fire follows the theme colours; the other elements bring their own palette.
+ // Colours come from the element's palette; this sets the ring's icon and motion.
  // pace = [base, random spread] in seconds for each icon's motion.
  const elementConfig = {
-   fire: { Icon: Flame, outer: colors.medium, inner: colors.accent, glow: colors.shadowColor, motion: 'flicker', pace: [0.5, 0.5], outerSpin: '20s', innerSpin: '15s' },
-   water: { Icon: Droplet, outer: '#38bdf8', inner: '#a5f3fc', glow: 'rgba(56, 189, 248, 0.6)', motion: 'drip', pace: [1.2, 0.8], outerSpin: '32s', innerSpin: '26s' },
-   wind: { Icon: Wind, outer: '#cbd5e1', inner: '#99f6e4', glow: 'rgba(153, 246, 228, 0.5)', motion: 'gust', pace: [0.8, 0.6], outerSpin: '8s', innerSpin: '6s' },
-   earth: { Icon: Mountain, outer: '#a16207', inner: '#65a30d', glow: 'rgba(161, 98, 7, 0.6)', motion: 'rumble', pace: [1.8, 1.0], outerSpin: '60s', innerSpin: '45s' },
+   fire: { Icon: Flame, motion: 'flicker', pace: [0.5, 0.5], outerSpin: '20s', innerSpin: '15s' },
+   water: { Icon: Droplet, motion: 'drip', pace: [1.2, 0.8], outerSpin: '32s', innerSpin: '26s' },
+   wind: { Icon: Wind, motion: 'gust', pace: [0.8, 0.6], outerSpin: '8s', innerSpin: '6s' },
+   earth: { Icon: Mountain, motion: 'rumble', pace: [1.8, 1.0], outerSpin: '60s', innerSpin: '45s' },
  };
  const ring = elementConfig[element];
 
@@ -1031,7 +1079,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {showButterflies && <MultipleButterflies colors={colors} />}
-      {cardBursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} />)}
+      {cardBursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} colors={colors} />)}
 
       <div
         className="w-full max-w-4xl mb-12 transition-all duration-1000"
@@ -1062,7 +1110,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
         <div 
           className="absolute inset-0 blur-3xl rounded-full opacity-30" 
           style={{ 
-            backgroundColor: ring.outer,
+            backgroundColor: colors.medium,
             transform: 'scale(1.1)'
           }}
         />
@@ -1079,9 +1127,9 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
               >
                 <ring.Icon
                   style={{
-                    color: ring.outer,
+                    color: colors.medium,
                     opacity: 0.7,
-                    filter: `drop-shadow(0 0 10px ${ring.glow})`,
+                    filter: `drop-shadow(0 0 10px ${colors.shadowColor})`,
                     animation: `${ring.motion} ${ring.pace[0] + Math.random() * ring.pace[1]}s infinite alternate`
                   }}
                   size={32}
@@ -1101,9 +1149,9 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
               >
                 <ring.Icon
                   style={{
-                    color: ring.inner,
+                    color: colors.accent,
                     opacity: 0.6,
-                    filter: `drop-shadow(0 0 8px ${ring.inner})`,
+                    filter: `drop-shadow(0 0 8px ${colors.accent})`,
                     animation: `${ring.motion} ${ring.pace[0] + 0.1 + Math.random() * ring.pace[1] * 0.8}s infinite alternate`
                   }}
                   size={24}
@@ -1116,8 +1164,8 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
             <div 
               className="w-80 h-80 rounded-full border-4 opacity-40"
               style={{
-                borderColor: '#ca8a04',
-                boxShadow: '0 0 30px rgba(202, 138, 4, 0.5), inset 0 0 30px rgba(202, 138, 4, 0.3)'
+                borderColor: colors.ring,
+                boxShadow: `0 0 30px rgba(${colors.ringRgb}, 0.5), inset 0 0 30px rgba(${colors.ringRgb}, 0.3)`
               }}
             />
           </div>
@@ -1254,8 +1302,8 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
       >
         {[
           { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
-          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
           { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleElementChange },
+          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
         ].map((skill, i) => (
           <div
             key={i}
@@ -1337,7 +1385,7 @@ const INTEREST_TAG_MAP = {
   'Statistical Modeling': ['Statistics'],
 };
 
-function InterestBurst({ x, y }) {
+function InterestBurst({ x, y, colors }) {
   const butterflies = [0, 1, 2, 3, 4, 5].map((i) => {
     const angle = (i * 60 + (Math.random() * 30 - 15)) * (Math.PI / 180);
     const distance = 40 + Math.random() * 35;
@@ -1362,13 +1410,13 @@ function InterestBurst({ x, y }) {
         >
           <svg width="14" height="18" viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15 20C15 20 2 10 2 20C2 30 8 38 15 38C22 38 28 30 28 20C28 10 15 20 15 20Z"
-                  fill="url(#burstWingGradient)" stroke="#7f1d1d" strokeWidth="0.75" />
-            <line x1="15" y1="6" x2="15" y2="24" stroke="#450a0a" strokeWidth="1.5" strokeLinecap="round" />
+                  fill="url(#burstWingGradient)" stroke={colors.darker} strokeWidth="0.75" />
+            <line x1="15" y1="6" x2="15" y2="24" stroke={colors.darkest} strokeWidth="1.5" strokeLinecap="round" />
             <defs>
               <linearGradient id="burstWingGradient" x1="2" y1="10" x2="28" y2="38">
-                <stop offset="0%" stopColor="#fca5a5" />
-                <stop offset="50%" stopColor="#ef4444" />
-                <stop offset="100%" stopColor="#b91c1c" />
+                <stop offset="0%" stopColor={colors.lighter} />
+                <stop offset="50%" stopColor={colors.particleColor} />
+                <stop offset="100%" stopColor={colors.dark} />
               </linearGradient>
             </defs>
           </svg>
@@ -1501,7 +1549,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
   return (
     <div className="min-h-screen px-6 py-24">
       {showButterflies && <MultipleButterflies colors={colors} />}
-      {bursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} />)}
+      {bursts.map((b) => <InterestBurst key={b.id} x={b.x} y={b.y} colors={colors} />)}
 
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16 fade-in">
@@ -1597,16 +1645,16 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                   onClick={(e) => handleInterestClick(interest, e)}
                   className="p-4 rounded-lg bg-black/40 backdrop-blur-sm text-left transition-all duration-300"
                   style={{
-                    border: `1px solid ${isActive ? '#ef4444' : colors.borderColor}`,
-                    backgroundColor: isActive ? 'rgba(239, 68, 68, 0.18)' : undefined,
-                    boxShadow: isActive ? '0 0 22px rgba(239, 68, 68, 0.55)' : 'none',
+                    border: `1px solid ${isActive ? colors.particleColor : colors.borderColor}`,
+                    backgroundColor: isActive ? `${colors.rgbaColor}0.18)` : undefined,
+                    boxShadow: isActive ? `0 0 22px ${colors.rgbaColor}0.55)` : 'none',
                     transform: isActive ? 'scale(1.03)' : 'scale(1)',
                   }}
                 >
                   <p
                     style={{
                       fontFamily: '"Rajdhani", sans-serif',
-                      color: isActive ? '#fca5a5' : colors.textLightColor,
+                      color: isActive ? colors.lighter : colors.textLightColor,
                       fontWeight: isActive ? 700 : 400,
                     }}
                   >
@@ -1626,7 +1674,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
               color: colors.textColor
             }}
           >
-            PUBLICATIONS {activeInterest && <span className="text-base font-normal text-red-400">— filtered by {activeInterest}</span>}
+            PUBLICATIONS {activeInterest && <span className="text-base font-normal" style={{ color: colors.textColor }}>— filtered by {activeInterest}</span>}
           </h2>
           <div className="space-y-6">
             {visiblePublications.map((pub, i) => (
