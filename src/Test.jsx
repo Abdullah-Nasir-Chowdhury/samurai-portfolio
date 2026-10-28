@@ -39,7 +39,8 @@ const makePalette = (p) => ({
   ringRgb: hexToRgb(p.ring || p.accent),
 });
 
-// Design card picks the element, Frontend card cycles the three moods inside it
+// Design card picks the element. The site uses each element's first mood; the other
+// two are kept for later (nothing cycles them now that Frontend changes the photo).
 const palettes = {
   fire: [
     // crimson
@@ -243,7 +244,7 @@ const playSound = async (soundRef) => {
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
       case 'research':
         return <ResearchPage playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       case 'projects':
@@ -251,7 +252,7 @@ const playSound = async (soundRef) => {
       case 'contact':
         return <ContactPage socialLinks={socialLinks} playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       default:
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
     }
   };
 
@@ -470,22 +471,19 @@ const playSound = async (soundRef) => {
           100% { opacity: 0; transform: translate(4px, -36vh); }
         }
 
-        @keyframes dropFall {
-          0% { opacity: 0; transform: translateY(0); }
-          10% { opacity: 0.5; }
-          100% { opacity: 0; transform: translateY(30vh); }
-        }
-
-        @keyframes windStreak {
-          0% { opacity: 0; transform: translateX(-10vw); }
-          30% { opacity: 0.45; }
-          100% { opacity: 0; transform: translateX(40vw); }
+        @keyframes windDraft {
+          0% { opacity: 0; transform: translate(-8vw, 0); }
+          40% { opacity: 0.16; }
+          100% { opacity: 0; transform: translate(30vw, -2vh); }
         }
 
         @keyframes leafFall {
           0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
-          15% { opacity: 0.6; }
-          100% { opacity: 0; transform: translate(var(--drift), 35vh) rotate(320deg); }
+          12% { opacity: 0.7; }
+          25% { transform: translate(14px, 9vh) rotate(70deg); }
+          50% { transform: translate(-10px, 18vh) rotate(150deg); }
+          75% { transform: translate(12px, 27vh) rotate(230deg); }
+          100% { opacity: 0; transform: translate(var(--drift), 36vh) rotate(320deg); }
         }
         
         .flame-ring-outer {
@@ -934,8 +932,10 @@ function FlyingButterfly({ animationClass, delay = 0, colors }) {
   );
 }
 
-// Background particles: embers rise (fire), bubbles rise and drops fall (water),
-// streaks blow sideways (wind), leaves and dust drift down (earth)
+// Background particles: amber embers rise (fire), bubbles rise (water),
+// faint drafts drift sideways (wind), leaves sway down (earth)
+const emberAmbers = ['#f59e0b', '#fbbf24', '#d97706'];
+
 function ElementParticles({ element, colors }) {
   // Seeded pseudo-random so the layout stays put across mouse-move re-renders
   const seed = [...element].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
@@ -953,34 +953,60 @@ function ElementParticles({ element, colors }) {
     variant: i % 3,
   }));
 
-  const styleFor = (p) => {
+  const renderParticle = (p, i) => {
+    const key = `${element}-${i}`;
     const base = { left: `${p.left}%`, top: `${p.top}%`, '--drift': `${p.drift}px`, animationDelay: `-${p.delay}s` };
     if (element === 'water') {
-      if (p.variant === 2) {
-        return { ...base, width: 2, height: 7, borderRadius: '50% 50% 50% 50% / 30% 30% 70% 70%', backgroundColor: colors.particleColor, animation: `dropFall ${4 + p.duration * 4}s linear infinite` };
-      }
-      const s = 4 + p.size * 7;
-      return { ...base, width: s, height: s, borderRadius: '50%', border: `1px solid ${colors.particleColor}`, animation: `bubbleRise ${8 + p.duration * 8}s ease-in-out infinite` };
+      const s = 5 + p.size * 9;
+      return (
+        <div key={key} className="absolute" style={{
+          ...base, width: s, height: s, borderRadius: '50%',
+          border: `1px solid ${colors.rgbaColor}0.7)`,
+          background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), ${colors.rgbaColor}0.08) 45%, transparent 70%)`,
+          animation: `bubbleRise ${8 + p.duration * 8}s ease-in-out infinite`
+        }} />
+      );
     }
     if (element === 'wind') {
-      return { ...base, left: `${p.left * 0.7}%`, width: 40 + p.size * 90, height: 1, background: `linear-gradient(to right, transparent, ${colors.particleColor}, transparent)`, animation: `windStreak ${3 + p.duration * 4}s ease-in-out infinite` };
+      // Only a third of the slots, faint and slow, so the drafts stay in the background
+      if (i % 3 !== 0) return null;
+      const w = 90 + p.size * 110;
+      return (
+        <svg key={key} className="absolute" width={w} height={24} viewBox="0 0 120 24" fill="none" style={{
+          ...base, left: `${p.left * 0.7}%`,
+          animation: `windDraft ${10 + p.duration * 6}s ease-in-out infinite`
+        }}>
+          <path d="M0 16 C 25 6, 50 20, 78 10 S 112 6, 120 12" stroke={colors.lighter} strokeWidth="1" strokeLinecap="round" />
+          <path d="M20 21 C 45 14, 70 23, 100 17" stroke={colors.lighter} strokeWidth="0.75" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
     }
     if (element === 'earth') {
-      if (p.variant === 2) {
-        return { ...base, width: 2, height: 2, borderRadius: '50%', backgroundColor: colors.lighter, animation: `float ${10 + p.duration * 15}s ease-in-out infinite` };
-      }
-      const s = 6 + p.size * 4;
-      return { ...base, width: s, height: s, borderRadius: '0 70% 0 70%', backgroundColor: colors.particleColor, animation: `leafFall ${9 + p.duration * 7}s linear infinite` };
+      const s = 7 + p.size * 6;
+      const leaf = p.variant === 1 ? colors.lighter : colors.particleColor;
+      return (
+        <div key={key} className="absolute" style={{
+          ...base, width: s, height: s, borderRadius: '0 70% 0 70%',
+          // the darker diagonal is the leaf's midrib, running tip to tip
+          background: `linear-gradient(45deg, ${leaf} 47%, rgba(0, 0, 0, 0.3) 50%, ${leaf} 53%)`,
+          animation: `leafFall ${10 + p.duration * 8}s linear infinite`
+        }} />
+      );
     }
-    const s = 2 + p.size * 2;
-    return { ...base, width: s, height: s, borderRadius: '50%', backgroundColor: colors.particleColor, boxShadow: `0 0 6px ${colors.particleColor}`, animation: `emberRise ${6 + p.duration * 8}s ease-out infinite` };
+    const s = 2 + p.size * 2.5;
+    const amber = emberAmbers[p.variant];
+    return (
+      <div key={key} className="absolute" style={{
+        ...base, width: s, height: s, borderRadius: '50%',
+        backgroundColor: amber, boxShadow: `0 0 6px ${amber}, 0 0 12px rgba(251, 191, 36, 0.4)`,
+        animation: `emberRise ${6 + p.duration * 8}s ease-out infinite`
+      }} />
+    );
   };
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {specs.map((p, i) => (
-        <div key={`${element}-${i}`} className="absolute" style={styleFor(p)} />
-      ))}
+      {specs.map(renderParticle)}
     </div>
   );
 }
@@ -998,7 +1024,7 @@ function MultipleButterflies({ colors }) {
 }
 
 // Home Page Component - FIXED NAVIGATION
-function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setElement, colors, profileImage, setProfileImage }) {
+function HomePage({ playSound, clickSoundRef, element, setElement, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
   const [cardBursts, setCardBursts] = useState([]);
@@ -1042,17 +1068,11 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
   return () => clearInterval(shimmerInterval);
  }, []);
 
- const handleThemeChange = () => {
-   playSound(clickSoundRef);
-   setTheme(prevTheme => (prevTheme + 1) % palettes[element].length);
- };
-
  const elementOrder = ['fire', 'water', 'wind', 'earth'];
 
  const handleElementChange = () => {
    playSound(clickSoundRef);
    setElement(prev => elementOrder[(elementOrder.indexOf(prev) + 1) % elementOrder.length]);
-   setTheme(0); // each element opens on its signature mood
  };
 
  // Colours come from the element's palette; this sets the ring's icon and motion.
@@ -1073,6 +1093,29 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
      const currentIndex = imageArray.indexOf(prevImage);
      const nextIndex = (currentIndex + 1) % imageArray.length;
      return imageArray[nextIndex];
+   });
+ };
+
+ // Photos the Frontend card steps through (web-sized copies in public/frontend)
+ const frontendImages = [
+   '/frontend/01-office-selfie.jpg',
+   '/frontend/02-lab-desk.jpg',
+   '/frontend/03-beach.jpg',
+   '/frontend/04-harbor-dome.jpg',
+   '/frontend/05-harbor-ship.jpg',
+   '/frontend/06-harbor-night.jpg',
+   '/frontend/07-bbq-group.jpg',
+   '/frontend/08-bbq-fire.jpg',
+   '/frontend/09-dinner.jpg',
+   '/frontend/10-dinner-friends.jpg',
+ ];
+
+ const handleFrontendImageChange = () => {
+   playSound(clickSoundRef);
+   setProfileImage(prevImage => {
+     // indexOf is -1 for the starting photo, so the first press shows frontendImages[0]
+     const nextIndex = (frontendImages.indexOf(prevImage) + 1) % frontendImages.length;
+     return frontendImages[nextIndex];
    });
  };
 
@@ -1301,7 +1344,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setEleme
         }}
       >
         {[
-          { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
+          { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleFrontendImageChange },
           { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleElementChange },
           { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
         ].map((skill, i) => (
