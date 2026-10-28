@@ -20,7 +20,7 @@ const makePalette = (p) => ({
   accentDark: p.accent,
   shadowColor: `rgba(${p.rgb}, 0.5)`,
   particleColor: p.particle,
-  kanjiColor: p.darker,
+  kanjiColor: p.medium,
   cursorColor: p.particle,
   borderColor: p.darker,
   borderMediumColor: p.dark,
@@ -281,13 +281,13 @@ const playSound = async (soundRef) => {
         }}
       >
         <div 
-          className="absolute top-20 right-20 opacity-5 select-none" 
+          className="absolute top-20 right-20 opacity-[0.08] select-none" 
           style={{ fontSize: '12rem', fontWeight: 'bold', color: colors.kanjiColor }}
         >
           侍
         </div>
         <div 
-          className="absolute bottom-20 left-20 opacity-5 select-none" 
+          className="absolute bottom-20 left-20 opacity-[0.08] select-none" 
           style={{ fontSize: '12rem', fontWeight: 'bold', color: colors.kanjiColor }}
         >
           武
