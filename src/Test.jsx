@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
 import OmikujiModal from './Omikuji';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
@@ -1030,7 +1029,6 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
   const [cardBursts, setCardBursts] = useState([]);
-  const navigate = useNavigate();
 
   const spawnCardBurst = (event) => {
     const burstId = Date.now() + Math.random();
@@ -1040,22 +1038,14 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
     }, 900);
   };
 
-  const handleNavigateToBlog = () => {
-    playSound(clickSoundRef);
-    navigate('/blog');
-  };
-
-  // Backend depends on the element: fire opens the omikuji draw, the rest still go to the blog
+  // Backend opens the omikuji draw on every element for now; water, wind and earth
+  // get their own backend demos later
   const [showOmikuji, setShowOmikuji] = useState(false);
   const closeOmikuji = useCallback(() => setShowOmikuji(false), []);
 
   const handleBackend = () => {
-    if (element === 'fire') {
-      playSound(clickSoundRef);
-      setShowOmikuji(true);
-    } else {
-      handleNavigateToBlog();
-    }
+    playSound(clickSoundRef);
+    setShowOmikuji(true);
   };
 
   useEffect(() => {
@@ -1365,7 +1355,7 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
         {[
           { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleFrontendImageChange },
           { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleElementChange },
-          { title: 'バックエンド', subtitle: 'Backend Arts', desc: element === 'fire' ? '火 · おみくじ — draw your fortune' : 'Node, Python, Databases', action: handleBackend },
+          { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'おみくじ — draw your fortune', action: handleBackend },
         ].map((skill, i) => (
           <div
             key={i}
