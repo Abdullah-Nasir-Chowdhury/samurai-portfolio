@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
+import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 export default function SamuraiPortfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -10,6 +10,7 @@ export default function SamuraiPortfolio() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [theme, setTheme] = useState('red'); // 'red', 'blue', or 'black'
+  const [element, setElement] = useState('fire'); // 'fire', 'water', 'wind', or 'earth'
   const [profileImage, setProfileImage] = useState('/a.jpg');
   
 // Audio refs
@@ -236,7 +237,7 @@ const playSound = async (soundRef) => {
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
       case 'research':
         return <ResearchPage playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       case 'projects':
@@ -244,7 +245,7 @@ const playSound = async (soundRef) => {
       case 'contact':
         return <ContactPage socialLinks={socialLinks} playSound={playSound} clickSoundRef={clickSoundRef} colors={colors} />;
       default:
-        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
+        return <HomePage playSound={playSound} clickSoundRef={clickSoundRef} theme={theme} setTheme={setTheme} element={element} setElement={setElement} colors={colors} profileImage={profileImage} setProfileImage={setProfileImage} />;
     }
   };
 
@@ -443,6 +444,21 @@ const playSound = async (soundRef) => {
         @keyframes flicker {
           0% { opacity: 0.6; transform: scale(0.95); }
           100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes drip {
+          0% { opacity: 0.5; transform: translateY(-4px) scale(0.9); }
+          100% { opacity: 1; transform: translateY(6px) scale(1.05, 0.95); }
+        }
+
+        @keyframes gust {
+          0% { opacity: 0.4; transform: translateX(-6px) rotate(-12deg); }
+          100% { opacity: 1; transform: translateX(6px) rotate(12deg); }
+        }
+
+        @keyframes rumble {
+          0% { opacity: 0.7; transform: translateY(0) scale(1); }
+          100% { opacity: 1; transform: translateY(2px) scale(1.08); }
         }
         
         .flame-ring-outer {
@@ -931,7 +947,7 @@ function MultipleButterflies({ colors }) {
 }
 
 // Home Page Component - FIXED NAVIGATION
-function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileImage, setProfileImage }) {
+function HomePage({ playSound, clickSoundRef, theme, setTheme, element, setElement, colors, profileImage, setProfileImage }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showButterflies, setShowButterflies] = useState(true);
   const [cardBursts, setCardBursts] = useState([]);
@@ -945,12 +961,6 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
     }, 900);
   };
 
-  // FIXED: Simple navigation function using window.location
-  const handleNavigateToModern = () => {
-    playSound(clickSoundRef);
-    navigate('/modern');
-  };
-  
   const handleNavigateToBlog = () => {
     playSound(clickSoundRef);
     navigate('/blog');
@@ -989,6 +999,23 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
      return 'red';
    });
  };
+
+ const elementOrder = ['fire', 'water', 'wind', 'earth'];
+
+ const handleElementChange = () => {
+   playSound(clickSoundRef);
+   setElement(prev => elementOrder[(elementOrder.indexOf(prev) + 1) % elementOrder.length]);
+ };
+
+ // Fire follows the theme colours; the other elements bring their own palette.
+ // pace = [base, random spread] in seconds for each icon's motion.
+ const elementConfig = {
+   fire: { Icon: Flame, outer: colors.medium, inner: colors.accent, glow: colors.shadowColor, motion: 'flicker', pace: [0.5, 0.5], outerSpin: '20s', innerSpin: '15s' },
+   water: { Icon: Droplet, outer: '#38bdf8', inner: '#a5f3fc', glow: 'rgba(56, 189, 248, 0.6)', motion: 'drip', pace: [1.2, 0.8], outerSpin: '32s', innerSpin: '26s' },
+   wind: { Icon: Wind, outer: '#cbd5e1', inner: '#99f6e4', glow: 'rgba(153, 246, 228, 0.5)', motion: 'gust', pace: [0.8, 0.6], outerSpin: '8s', innerSpin: '6s' },
+   earth: { Icon: Mountain, outer: '#a16207', inner: '#65a30d', glow: 'rgba(161, 98, 7, 0.6)', motion: 'rumble', pace: [1.8, 1.0], outerSpin: '60s', innerSpin: '45s' },
+ };
+ const ring = elementConfig[element];
 
  const imageArray = ['/doflamingo.png', '/a.jpg', '/b.jpg', '/c.jpg', '/d.jpg', '/e.jpg', '/f.jpg', '/g.jpg', '/h.jpg', '/i.jpg', '/j.jpg', '/k.jpg', '/l.jpg', '/m.jpg', '/n.jpg', '/o.jpg', '/p.jpg', '/q.jpg',];
  
@@ -1035,13 +1062,13 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         <div 
           className="absolute inset-0 blur-3xl rounded-full opacity-30" 
           style={{ 
-            backgroundColor: colors.medium,
-            transform: 'scale(1.1)' 
-          }} 
+            backgroundColor: ring.outer,
+            transform: 'scale(1.1)'
+          }}
         />
-        
+
         <div className="relative w-80 h-80 flex items-center justify-center">
-          <div className="absolute inset-0 flame-ring-outer">
+          <div className="absolute inset-0 flame-ring-outer" style={{ animationDuration: ring.outerSpin }}>
             {[...Array(12)].map((_, i) => (
               <div
                 key={i}
@@ -1050,12 +1077,12 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
                   transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-160px)`,
                 }}
               >
-                <Flame 
+                <ring.Icon
                   style={{
-                    color: colors.medium,
+                    color: ring.outer,
                     opacity: 0.7,
-                    filter: `drop-shadow(0 0 10px ${colors.shadowColor})`,
-                    animation: `flicker ${0.5 + Math.random() * 0.5}s infinite alternate`
+                    filter: `drop-shadow(0 0 10px ${ring.glow})`,
+                    animation: `${ring.motion} ${ring.pace[0] + Math.random() * ring.pace[1]}s infinite alternate`
                   }}
                   size={32}
                 />
@@ -1063,7 +1090,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
             ))}
           </div>
 
-          <div className="absolute inset-0 flame-ring-inner">
+          <div className="absolute inset-0 flame-ring-inner" style={{ animationDuration: ring.innerSpin }}>
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
@@ -1072,12 +1099,12 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
                   transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-172px)`,
                 }}
               >
-                <Flame 
+                <ring.Icon
                   style={{
-                    color: colors.accent,
+                    color: ring.inner,
                     opacity: 0.6,
-                    filter: `drop-shadow(0 0 8px ${colors.accent})`,
-                    animation: `flicker ${0.6 + Math.random() * 0.4}s infinite alternate`
+                    filter: `drop-shadow(0 0 8px ${ring.inner})`,
+                    animation: `${ring.motion} ${ring.pace[0] + 0.1 + Math.random() * ring.pace[1] * 0.8}s infinite alternate`
                   }}
                   size={24}
                 />
@@ -1228,7 +1255,7 @@ function HomePage({ playSound, clickSoundRef, theme, setTheme, colors, profileIm
         {[
           { title: 'フロントエンド', subtitle: 'Frontend Mastery', desc: 'React, Vue, Next.js', action: handleThemeChange },
           { title: 'バックエンド', subtitle: 'Backend Arts', desc: 'Node, Python, Databases', action: handleNavigateToBlog },
-          { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleNavigateToModern },
+          { title: 'デザイン', subtitle: 'Design Philosophy', desc: 'UI/UX, Responsive Design', action: handleElementChange },
         ].map((skill, i) => (
           <div
             key={i}
