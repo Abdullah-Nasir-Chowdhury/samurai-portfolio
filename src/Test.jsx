@@ -1523,6 +1523,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       status: 'Accepted',
       abstract: 'We test subspace classifiers for robustness to synthetic-to-real domain shift on point cloud surface inspection: an end-to-end U-Net, PointNet++, a nearest-subspace rule on frozen features, and training-free shape subspaces, evaluated on four fuselage scans and 597 annotated Real3D-AD objects. The nearest-subspace margin is the only decision rule whose operating point survives the real feature shift.',
       link: null,
+      projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/accv2026/',
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
     },
     {
@@ -1531,6 +1532,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: 'WACV 2027, Datasets Track',
       status: 'Accepted',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion. Rotation-invariant architectures achieve the best pose robustness but rank among the lowest on noise robustness, a statistically significant trade-off; a simple invariance loss narrows this gap on unseen corruptions without transferring across corruption families.',
+      projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/wacv2027/',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'VIEW INTERACTIVE DEMO',
       tags: ['Computer Vision', 'Statistics', 'Robustness']
@@ -1779,21 +1781,38 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                     </span>
                   ))}
                 </div>
-                {pub.link && (
-                  <a
-                    href={pub.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => playSound(clickSoundRef)}
-                    className="inline-block px-6 py-2 text-white rounded transition-colors"
-                    style={{
-                      fontFamily: '"Rajdhani", sans-serif',
-                      backgroundColor: colors.medium
-                    }}
-                  >
-                    {pub.linkLabel || 'READ PAPER'}
-                  </a>
-                )}
+                <div className="flex flex-wrap gap-3">
+                  {pub.projectPage && (
+                    <a
+                      href={pub.projectPage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => playSound(clickSoundRef)}
+                      className="inline-block px-6 py-2 text-white rounded transition-colors"
+                      style={{
+                        fontFamily: '"Rajdhani", sans-serif',
+                        backgroundColor: colors.medium
+                      }}
+                    >
+                      PROJECT PAGE
+                    </a>
+                  )}
+                  {pub.link && (
+                    <a
+                      href={pub.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => playSound(clickSoundRef)}
+                      className="inline-block px-6 py-2 text-white rounded transition-colors"
+                      style={{
+                        fontFamily: '"Rajdhani", sans-serif',
+                        backgroundColor: colors.medium
+                      }}
+                    >
+                      {pub.linkLabel || 'READ PAPER'}
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
           </div>

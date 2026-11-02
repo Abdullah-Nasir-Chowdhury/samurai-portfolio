@@ -556,6 +556,7 @@ function ResearchSection() {
       venue: 'ACCV 2026 (accepted)',
       abstract: 'Subspace classifiers tested for robustness under synthetic-to-real domain shift on point cloud surface inspection across four fuselage scans and 597 annotated Real3D-AD objects.',
       link: null,
+      projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/accv2026/',
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
     },
     {
@@ -564,6 +565,7 @@ function ResearchSection() {
       authors: 'A.N. Chowdhury, et al.',
       venue: 'WACV 2027, Datasets Track (accepted)',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion, isolating the rotation-invariance vs. noise-robustness trade-off.',
+      projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/wacv2027/',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'View Demo',
       tags: ['Computer Vision', 'Statistics', 'Robustness']
@@ -656,21 +658,34 @@ function ResearchSection() {
                   <p className="text-sm text-gray-400 mb-1">{pub.authors}</p>
                   <p className="text-sm text-gray-500 italic">{pub.venue}</p>
                 </div>
-                {pub.link ? (
-                  <a
-                    href={pub.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
-                  >
-                    {pub.linkLabel || 'View Paper'}
-                    <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </a>
-                ) : (
-                  <span className="px-6 py-2 bg-slate-800 text-gray-400 rounded-lg font-semibold whitespace-nowrap">
-                    Accepted
-                  </span>
-                )}
+                <div className="flex flex-wrap gap-2">
+                  {pub.projectPage && (
+                    <a
+                      href={pub.projectPage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
+                    >
+                      Project Page
+                      <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  )}
+                  {pub.link ? (
+                    <a
+                      href={pub.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
+                    >
+                      {pub.linkLabel || 'View Paper'}
+                      <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  ) : !pub.projectPage && (
+                    <span className="px-6 py-2 bg-slate-800 text-gray-400 rounded-lg font-semibold whitespace-nowrap">
+                      Accepted
+                    </span>
+                  )}
+                </div>
               </div>
               <p className="text-gray-300 mb-4">{pub.abstract}</p>
               <div className="flex flex-wrap gap-2">
