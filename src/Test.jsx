@@ -1373,14 +1373,15 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
               }}
             />
             <div 
-              className="relative rounded-lg p-6 backdrop-blur-sm bg-black/40 transition-all duration-300 hover:scale-105"
+              className="relative h-full rounded-lg p-6 backdrop-blur-sm bg-black/40 transition-all duration-300 hover:scale-105"
               style={{ 
                 boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
                 border: `1px solid ${colors.borderColor}`
               }}
             >
+              {/* Scales with the viewport in the 3-column layout so フロントエンド stays on one line */}
               <h3
-                className="text-4xl mb-2"
+                className="text-4xl md:text-[clamp(1.25rem,3vw,2.25rem)] whitespace-nowrap mb-2"
                 style={{
                   fontFamily: '"Yuji Syuku", "Noto Serif JP", serif',
                   color: colors.textColor
