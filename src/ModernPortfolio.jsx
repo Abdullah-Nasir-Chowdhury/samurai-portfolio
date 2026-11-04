@@ -555,7 +555,7 @@ function ResearchSection() {
       authors: 'A.N. Chowdhury, et al.',
       venue: 'ACCV 2026 (accepted)',
       abstract: 'Subspace classifiers tested for robustness under synthetic-to-real domain shift on point cloud surface inspection across four fuselage scans and 597 annotated Real3D-AD objects.',
-      link: null,
+      paper: 'https://arxiv.org/abs/2611.02744',
       projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/accv2026/',
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
     },
@@ -565,6 +565,7 @@ function ResearchSection() {
       authors: 'A.N. Chowdhury, et al.',
       venue: 'WACV 2027, Datasets Track (accepted)',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion, isolating the rotation-invariance vs. noise-robustness trade-off.',
+      paper: 'https://arxiv.org/abs/2611.03952',
       projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/wacv2027/',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'View Demo',
@@ -576,7 +577,7 @@ function ResearchSection() {
       authors: 'A.N. Chowdhury, et al.',
       venue: '2025 QPAIN',
       abstract: 'Explores the creation of a real-time Global Positioning System (GPS) and Passenger Tracking System (PTS).',
-      link: 'https://ieeexplore.ieee.org/document/11172005',
+      paper: 'https://ieeexplore.ieee.org/document/11172005',
       tags: ['IoT', 'Systems', 'GPS']
     },
     {
@@ -585,7 +586,7 @@ function ResearchSection() {
       authors: 'C.A. Nasir, et al.',
       venue: '2025 ISACC',
       abstract: 'Comparative study of key metrics for OCR engines in Bangla language processing using PyTesseract and EasyOCR.',
-      link: 'https://ieeexplore.ieee.org/document/10969286',
+      paper: 'https://ieeexplore.ieee.org/document/10969286',
       tags: ['OCR', 'NLP', 'Dataset']
     },
     {
@@ -594,7 +595,7 @@ function ResearchSection() {
       authors: 'C.A. Nasir, et al.',
       venue: '2024 I2CT',
       abstract: 'Implements MATLAB Image Processing Toolbox for license plate detection using ResNet50 and Linear SVM.',
-      link: 'https://ieeexplore.ieee.org/document/10543675',
+      paper: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning', 'OCR']
     },
     {
@@ -603,7 +604,7 @@ function ResearchSection() {
       authors: 'A.A. Sami, G. Debnath, R. Dey, A.N. Chowdhury',
       venue: '2025 ICCIT',
       abstract: 'Investigates the vulnerability of large language models to code poisoning attacks through misleading comments embedded in code snippets.',
-      link: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
+      paper: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
       tags: ['Machine Learning', 'Security', 'LLMs']
     },
   ];
@@ -659,6 +660,17 @@ function ResearchSection() {
                   <p className="text-sm text-gray-500 italic">{pub.venue}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {pub.paper && (
+                    <a
+                      href={pub.paper}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
+                    >
+                      Read Paper
+                      <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  )}
                   {pub.projectPage && (
                     <a
                       href={pub.projectPage}
@@ -677,10 +689,10 @@ function ResearchSection() {
                       rel="noopener noreferrer"
                       className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all flex items-center gap-2 group whitespace-nowrap"
                     >
-                      {pub.linkLabel || 'View Paper'}
+                      {pub.linkLabel}
                       <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                  ) : !pub.projectPage && (
+                  ) : !pub.projectPage && !pub.paper && (
                     <span className="px-6 py-2 bg-slate-800 text-gray-400 rounded-lg font-semibold whitespace-nowrap">
                       Accepted
                     </span>

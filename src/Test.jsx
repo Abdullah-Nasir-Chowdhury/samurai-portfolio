@@ -1523,7 +1523,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: 'ACCV 2026',
       status: 'Accepted',
       abstract: 'We test subspace classifiers for robustness to synthetic-to-real domain shift on point cloud surface inspection: an end-to-end U-Net, PointNet++, a nearest-subspace rule on frozen features, and training-free shape subspaces, evaluated on four fuselage scans and 597 annotated Real3D-AD objects. The nearest-subspace margin is the only decision rule whose operating point survives the real feature shift.',
-      link: null,
+      paper: 'https://arxiv.org/abs/2611.02744',
       projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/accv2026/',
       tags: ['Computer Vision', '3D Point Clouds', 'Subspace Methods']
     },
@@ -1533,6 +1533,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: 'WACV 2027, Datasets Track',
       status: 'Accepted',
       abstract: 'A statistically powered benchmark of 10 point cloud architectures across 5 domains under pose, noise, and occlusion. Rotation-invariant architectures achieve the best pose robustness but rank among the lowest on noise robustness, a statistically significant trade-off; a simple invariance loss narrows this gap on unseen corruptions without transferring across corruption families.',
+      paper: 'https://arxiv.org/abs/2611.03952',
       projectPage: 'https://abdullah-nasir-chowdhury.github.io/projects/wacv2027/',
       link: 'https://abdullah-nasir-chowdhury.github.io/pcr-mock-playground/',
       linkLabel: 'VIEW INTERACTIVE DEMO',
@@ -1544,7 +1545,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: '2025 International Conference on Quantum Photonics, Artificial Intelligence, and Networking (QPAIN)',
       status: 'Published',
       abstract: 'Our research paper explores the creation of a realtime Global Positioning System (GPS) and Passenger Tracking System (PTS), covering simulation, hardware setup, and prototype evaluation. ',
-      link: 'https://ieeexplore.ieee.org/document/11172005',
+      paper: 'https://ieeexplore.ieee.org/document/11172005',
       tags: ['Embedded Systems', 'IoT']
     },
     {
@@ -1553,7 +1554,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: '2025 3rd International Conference on Intelligent Systems, Advanced Computing and Communication (ISACC)',
       status: 'Published',
       abstract: 'This paper presents a comparative study of key metrics for OCR engines in Bangla language processing. PyTesseract (a Python wrapper for Tesseract OCR) and EasyOCR were benchmarked on a novel dataset, "Bangla-CrossHair," created for testing OCR engines. ',
-      link: 'https://ieeexplore.ieee.org/document/10969286',
+      paper: 'https://ieeexplore.ieee.org/document/10969286',
       tags: ['Machine Learning', 'OCR']
     },
     {
@@ -1562,7 +1563,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: '2024 IEEE 9th International Conference for Convergence in Technology (I2CT)',
       status: 'Published',
       abstract: 'This paper implements the MATLAB Image Processing Toolbox in detecting the license plate region using several user-defined functions in order to pre-process and process the image up until the point of extraction of characters.',
-      link: 'https://ieeexplore.ieee.org/document/10543675',
+      paper: 'https://ieeexplore.ieee.org/document/10543675',
       tags: ['Computer Vision', 'Deep Learning']
     },
     {
@@ -1571,7 +1572,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
       venue: '2025 28th International Conference on Computer and Information Technology (ICCIT)',
       status: 'Published',
       abstract: 'This study investigates the vulnerability of Large Language Models (LLMs) to code poisoning attacks through misleading comments. By embedding deceptive comments within code snippets, we demonstrate how LLMs can be manipulated into generating harmful or unintended outputs.',
-      link: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
+      paper: 'https://www.researchgate.net/publication/400360433_Code_Poisoning_Through_Misleading_Comments_Jailbreaking_Large_Language_Models_via_Contextual_Deception',
       tags: ['Machine Learning', 'Security', 'LLMs']
     },
   ];
@@ -1783,6 +1784,21 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-3">
+                  {pub.paper && (
+                    <a
+                      href={pub.paper}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => playSound(clickSoundRef)}
+                      className="inline-block px-6 py-2 text-white rounded transition-colors"
+                      style={{
+                        fontFamily: '"Rajdhani", sans-serif',
+                        backgroundColor: colors.medium
+                      }}
+                    >
+                      READ PAPER
+                    </a>
+                  )}
                   {pub.projectPage && (
                     <a
                       href={pub.projectPage}
@@ -1810,7 +1826,7 @@ function ResearchPage({ playSound, clickSoundRef, colors }) {
                         backgroundColor: colors.medium
                       }}
                     >
-                      {pub.linkLabel || 'READ PAPER'}
+                      {pub.linkLabel}
                     </a>
                   )}
                 </div>
