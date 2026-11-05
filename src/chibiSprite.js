@@ -27,15 +27,26 @@ function ell(g, col, cx, cy, rx, ry, test) {
     }
 }
 
+// Hakama as wide-leg trousers split down the middle, ending at the ankles, then tabi and zori
 function drawLower(g) {
-  for (let y = 40; y <= 52; y++) {
-    const hw = 7 + Math.floor((y - 40) * 0.42), x0 = 24 - hw, x1 = 24 + hw;
-    px(g, 'P', x0, y, x1 - x0, 1); px(g, 'Q', x0, y, 2, 1); px(g, 'p', x1 - 2, y, 2, 1);
-    if (y >= 43) {
-      px(g, 'p', 24, y); px(g, 'p', 24 - Math.round(hw * 0.5), y); px(g, 'p', 24 + Math.round(hw * 0.5), y);
+  for (let y = 40; y <= 57; y++) {
+    const hw = 7 + Math.floor((y - 40) * 0.25), x0 = 24 - hw, x1 = 24 + hw;
+    px(g, 'P', x0, y, x1 - x0, 1);
+    px(g, 'Q', x0, y, 2, 1); px(g, 'p', x1 - 2, y, 2, 1);
+    if (y >= 44) { // pleats run down each leg
+      px(g, 'p', 24 - Math.round(hw * 0.55), y); px(g, 'p', 24 + Math.round(hw * 0.55), y);
     }
+    if (y >= 46) { // split between the legs, widening toward the hem
+      const gap = y >= 52 ? 3 : 2, gx = 24 - Math.floor(gap / 2);
+      g.clearRect(gx, y, gap, 1);
+      px(g, 'p', gx - 1, y); px(g, 'Q', gx + gap, y);
+    } else if (y >= 43) px(g, 'p', 24, y);
   }
-  px(g, 'p', 16, 40, 16, 1);
+  px(g, 'p', 16, 40, 16, 1);                      // waist band
+  px(g, 'p', 13, 57, 9, 1); px(g, 'p', 26, 57, 9, 1); // hem shadow
+  px(g, 'w', 17, 58, 5, 1); px(g, 'w', 26, 58, 5, 1); // tabi socks
+  px(g, 'Z', 16, 59, 7, 2); px(g, 'Z', 25, 59, 7, 2); // zori
+  px(g, 'R', 18, 58, 1, 1); px(g, 'R', 28, 58, 1, 1); // red hanao straps
 }
 
 function drawTorso(g, arms) {
@@ -54,6 +65,11 @@ function drawTorso(g, arms) {
     px(g, 'O', 27, 28, 3, 4); px(g, 'o', 27, 31, 3, 1); px(g, 'o', 29, 28, 1, 3);
     px(g, 'D', 21, 34, 12, 3); px(g, 'M', 21, 34, 12, 1); px(g, 'Cf', 19, 34, 2, 3);
     px(g, 'O', 16, 34, 3, 3); px(g, 'o', 16, 36, 3, 1);
+  } else if (arms === 'wave') {
+    // left arm hangs; the right arm is drawn raised in compose()
+    px(g, 'A', 11, 26, 5, 12); px(g, 'M', 11, 32, 5, 6); px(g, 'w', 12, 27, 2, 1);
+    px(g, 'Cf', 12, 38, 3, 1); px(g, 'O', 12, 39, 3, 3); px(g, 'o', 14, 39, 1, 3);
+    px(g, 'M', 32, 25, 4, 4); px(g, 'D', 32, 28, 4, 1);
   } else {
     px(g, 'A', 11, 26, 5, 12); px(g, 'M', 11, 32, 5, 6); px(g, 'w', 12, 27, 2, 1);
     px(g, 'M', 32, 26, 5, 12); px(g, 'D', 32, 32, 5, 6);
@@ -67,7 +83,7 @@ function drawTorso(g, arms) {
 }
 
 // q: 0 upright → 1 face fully tucked
-function drawHead(g, q, blink, glint, tuft) {
+function drawHead(g, q, blink, glint, tuft, talk = false, browUp = false) {
   g.clearRect(0, 0, 48, 30);
   const f = Math.round(q * 6), down = Math.round(q * 7);
   ell(g, 'H', 24, 10, 10.6, 7.6);
@@ -83,7 +99,8 @@ function drawHead(g, q, blink, glint, tuft) {
   px(g, 'h', 19, 4, 3, 1); px(g, 'h', 25, 3, 2, 1); px(g, 'h', 28, 5, 2, 1);
   const vis = (y) => y >= top && y <= 23 - Math.round(q * 3);
   const F = (col, x, y, w = 1, h = 1) => { for (let yy = y; yy < y + h; yy++) if (vis(yy)) px(g, col, x, yy, w, 1); };
-  F('H', 17, 11 + f, 5); F('H', 26, 11 + f, 5);
+  const bU = browUp ? -1 : 0;
+  F('H', 17, 11 + f + bU, 5); F('H', 26, 11 + f + bU, 5);
   for (const gx of [16, 25]) {
     F('G', gx, 13 + f, 7); F('G', gx, 16 + f, 7); F('G', gx, 13 + f, 1, 4); F('G', gx + 6, 13 + f, 1, 4);
   }
@@ -96,6 +113,38 @@ function drawHead(g, q, blink, glint, tuft) {
   F('B', 16, 19 + f, 6); F('B', 26, 19 + f, 7);
   F('B', 16, 20 + f, 17); F('B', 17, 21 + f, 15); F('B', 18, 22 + f, 13);
   if (q < 0.4) { px(g, 'B', 20, 23, 9, 1); px(g, 'B', 22, 24, 5, 1); }
+  if (talk) { // open, grinning mouth
+    F('M2', 21, 19 + f, 6); F('#3a1a14', 22, 20 + f, 4); F('#d0606a', 23, 21 + f, 2); F('W', 22, 19 + f, 4);
+  }
+}
+
+// Thick pixel line, used for the raised arm
+function stamp(g, col, x0, y0, x1, y1, w) {
+  g.fillStyle = C[col] || col;
+  const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 2));
+  for (let i = 0; i <= n; i++) {
+    const x = x0 + (x1 - x0) * i / n, y = y0 + (y1 - y0) * i / n;
+    g.fillRect(Math.round(x - w / 2), Math.round(y - w / 2), w, w);
+  }
+}
+
+// Right arm raised beside the head; a = forearm angle from vertical (radians)
+function drawWaveArm(g, a, yOff) {
+  const sx = 34, sy = 27 + yOff, ex = 38, ey = 20 + yOff;
+  stamp(g, 'M', sx, sy, ex, ey, 4);        // happi sleeve, slid down to the elbow
+  stamp(g, 'A', sx - 1, sy - 1, ex - 1, ey - 1, 1);
+  const dx = Math.sin(a), dy = -Math.cos(a);
+  const hx = ex + dx * 7, hy = ey + dy * 7;
+  stamp(g, 'T', ex, ey, ex + dx * 5, ey + dy * 5, 3); // black undershirt sleeve
+  stamp(g, 'Cf', ex + dx * 5, ey + dy * 5, ex + dx * 5.5, ey + dy * 5.5, 3);
+  // open glove, fingers spread along the forearm direction
+  g.fillStyle = C.O;
+  g.fillRect(Math.round(hx - 1.5), Math.round(hy - 1.5), 3, 3);
+  const nx = -dy, ny = dx; // across the palm
+  for (const k of [-1, 0, 1]) g.fillRect(Math.round(hx + dx * 2 + nx * k), Math.round(hy + dy * 2 + ny * k), 1, 1);
+  g.fillRect(Math.round(hx + nx * 2.2), Math.round(hy + ny * 2.2), 1, 1); // thumb
+  g.fillStyle = C.o;
+  g.fillRect(Math.round(hx - nx), Math.round(hy - ny), 1, 1);
 }
 
 const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
@@ -107,14 +156,27 @@ export function createChibi({ reduceMotion = false } = {}) {
   const [lowC, low] = mk(48, 64); drawLower(low);
   const [torIdle, ti] = mk(48, 64); drawTorso(ti, 'idle');
   const [torSide, ts] = mk(48, 64); drawTorso(ts, 'side');
+  const [torWave, tw] = mk(48, 64); drawTorso(tw, 'wave');
   const [headC, hg] = mk(48, 30);
   const [charC, cg] = mk(48, 64);
 
   const DUR = reduceMotion
     ? { wait: 0.2, prep: 0.1, down: 0.25, hold: 2.8, up: 0.25, after: 0.2 }
     : { wait: 0.45, prep: 0.28, down: 0.62, hold: 2.8, up: 0.55, after: 0.45 };
-  const st = { p: 0, arms: 'idle', blink: false, glint: -1, breath: 0, hop: 0, tuft: false };
-  let t = 0, bow = null, nextBlink = 1.5, blinkUntil = 0, glintT = 3;
+  const st = { p: 0, arms: 'idle', blink: false, glint: -1, breath: 0, hop: 0, tuft: false, armA: 0, talk: false };
+  let t = 0, bow = null, wave = null, nextBlink = 1.5, blinkUntil = 0, glintT = 3;
+
+  // Enthusiastic one-arm wave with little hops while he talks
+  function updateWave() {
+    if (!wave) return;
+    const e = t - wave.t0;
+    if (e > wave.dur) { wave = null; st.arms = 'idle'; st.hop = 0; st.talk = false; return; }
+    st.arms = 'wave';
+    const speed = reduceMotion ? 5 : 13;
+    st.armA = (Math.round(Math.sin(e * speed) * 1.5) / 1.5) * 0.5; // three stepped frames
+    st.hop = reduceMotion ? 0 : (Math.sin(e * speed / 2) > 0.55 ? 2 : Math.sin(e * speed / 2) > 0.1 ? 1 : 0);
+    st.talk = e > 0.3 && Math.sin(e * 9) > -0.2;
+  }
 
   function updateBow() {
     if (!bow) return;
@@ -144,9 +206,12 @@ export function createChibi({ reduceMotion = false } = {}) {
     const s = 1 - 0.44 * st.p, pivot = 41, srcTop = 24, srcH = 24;
     const dTop = Math.round(pivot - (pivot - srcTop) * s) + st.breath - st.hop;
     const dH = Math.max(1, Math.round(srcH * s));
-    cg.drawImage(st.arms === 'idle' ? torIdle : torSide, 0, srcTop, 48, srcH, 0, dTop, 48, dH);
-    drawHead(hg, st.p, st.blink, st.glint, st.tuft);
+    const tor = st.arms === 'idle' ? torIdle : st.arms === 'wave' ? torWave : torSide;
+    cg.drawImage(tor, 0, srcTop, 48, srcH, 0, dTop, 48, dH);
+    const waving = st.arms === 'wave';
+    drawHead(hg, st.p, st.blink, st.glint, st.tuft, waving && st.talk, waving);
     cg.drawImage(headC, 0, dTop - 24 + Math.round(st.p * 4));
+    if (waving) drawWaveArm(cg, st.armA, dTop - 24);
     // 1px dark outline around everything
     const img = cg.getImageData(0, 0, 48, 64), d = img.data, a = new Uint8Array(48 * 64);
     for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3] > 0 ? 1 : 0;
@@ -162,10 +227,11 @@ export function createChibi({ reduceMotion = false } = {}) {
 
   return {
     canvas: charC,
-    bow() { bow = { t0: t }; },
+    bow() { wave = null; bow = { t0: t }; },
+    wave(dur = 3) { bow = null; st.p = 0; wave = { t0: t, dur }; },
     update(dt) {
       t += dt;
-      st.breath = !bow && Math.sin(t * 2.2) > 0.35 ? 1 : 0;
+      st.breath = !bow && !wave && Math.sin(t * 2.2) > 0.35 ? 1 : 0;
       st.tuft = Math.sin(t * 2.2 + 0.6) > 0.35;
       if (t > nextBlink) { blinkUntil = t + 0.12; nextBlink = t + 2.2 + Math.random() * 3; }
       st.blink = t < blinkUntil;
@@ -176,6 +242,7 @@ export function createChibi({ reduceMotion = false } = {}) {
         if (k >= 6) glintT = 4 + Math.random() * 4;
       } else st.glint = -1;
       updateBow();
+      updateWave();
       compose();
     },
   };

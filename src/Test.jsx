@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import OmikujiModal from './Omikuji';
 import ThankYouToast from './ThankYouToast';
+import WelcomeToast from './WelcomeToast';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 const hexToRgb = (hex) => {
@@ -264,6 +265,7 @@ const playSound = async (soundRef) => {
       style={{ background: `radial-gradient(ellipse at 50% 0%, ${colors.darkest}99 0%, ${colors.pageBg} 60%)` }}
     >
       <CustomCursor colors={colors} />
+      <WelcomeToast colors={colors} />
       <ThankYouToast colors={colors} />
       {/* Japanese Pattern Background */}
       <div 
