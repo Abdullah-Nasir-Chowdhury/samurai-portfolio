@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import OmikujiModal from './Omikuji';
 import ThankYouToast from './ThankYouToast';
@@ -1094,6 +1094,17 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
  };
  const ring = elementConfig[element];
 
+ // Pick each icon's animation duration once per element. Rolling Math.random() during render
+ // gave the icons new durations on every re-render (every mouse move), so they jumped and shook.
+ const ringDurations = useMemo(() => {
+   const [base, spread] = elementConfig[element].pace;
+   return {
+     outer: Array.from({ length: 12 }, () => base + Math.random() * spread),
+     inner: Array.from({ length: 8 }, () => base + 0.1 + Math.random() * spread * 0.8),
+   };
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [element]);
+
  const imageArray = ['/doflamingo.png', '/a.jpg', '/b.jpg', '/c.jpg', '/d.jpg', '/e.jpg', '/f.jpg', '/g.jpg', '/h.jpg', '/i.jpg', '/j.jpg', '/k.jpg', '/l.jpg', '/m.jpg', '/n.jpg', '/o.jpg', '/p.jpg', '/q.jpg',];
  
  const handleImageChange = () => {
@@ -1186,7 +1197,7 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
                     color: colors.medium,
                     opacity: 0.7,
                     filter: `drop-shadow(0 0 10px ${colors.shadowColor})`,
-                    animation: `${ring.motion} ${ring.pace[0] + Math.random() * ring.pace[1]}s infinite alternate`
+                    animation: `${ring.motion} ${ringDurations.outer[i]}s infinite alternate`
                   }}
                   size={32}
                 />
@@ -1208,7 +1219,7 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
                     color: colors.accent,
                     opacity: 0.6,
                     filter: `drop-shadow(0 0 8px ${colors.accent})`,
-                    animation: `${ring.motion} ${ring.pace[0] + 0.1 + Math.random() * ring.pace[1] * 0.8}s infinite alternate`
+                    animation: `${ring.motion} ${ringDurations.inner[i]}s infinite alternate`
                   }}
                   size={24}
                 />
@@ -1443,14 +1454,15 @@ const INTEREST_TAG_MAP = {
 };
 
 function InterestBurst({ x, y, colors }) {
-  const butterflies = [0, 1, 2, 3, 4, 5].map((i) => {
+  // useState initializer: roll the random paths once, not on every re-render
+  const [butterflies] = useState(() => [0, 1, 2, 3, 4, 5].map((i) => {
     const angle = (i * 60 + (Math.random() * 30 - 15)) * (Math.PI / 180);
     const distance = 40 + Math.random() * 35;
     const dx = Math.cos(angle) * distance;
     const dy = Math.sin(angle) * distance - 20;
     const duration = 0.5 + Math.random() * 0.25;
     return { id: i, dx, dy, duration, delay: Math.random() * 0.08 };
-  });
+  }));
 
   return (
     <div className="fixed pointer-events-none z-[70]" style={{ left: x, top: y }}>
