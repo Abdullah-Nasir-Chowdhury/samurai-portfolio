@@ -3,8 +3,9 @@ import { createPortal } from 'react-dom';
 import OmikujiModal from './Omikuji';
 import ThankYouToast from './ThankYouToast';
 import WelcomeToast from './WelcomeToast';
-import ScrollUpToast, { SCROLL_UP_ID } from './ScrollUpToast';
-import { request as requestToast, useToastBlock } from './toastQueue';
+import ScrollUpToast from './ScrollUpToast';
+import { askScrollUpToast } from './scrollUpHint';
+import { useToastBlock } from './toastQueue';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 const hexToRgb = (hex) => {
@@ -1165,14 +1166,11 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
      const nextIndex = (frontendImages.indexOf(prevImage) + 1) % frontendImages.length;
      return frontendImages[nextIndex];
    });
-   // On a phone, if less than half the photo is on screen (the cards sit below it there),
-   // the chibi pops up pointing up so the visitor knows something changed up there
-   const isPhone = window.matchMedia('(pointer: coarse)').matches
-     && Math.min(window.screen.width, window.screen.height) < 768;
+   // If less than half the photo is on screen, a toast hints that something changed (once per visit)
    const rect = photoRef.current?.getBoundingClientRect();
-   if (isPhone && rect) {
+   if (rect) {
      const onScreen = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-     if (onScreen < rect.height / 2) requestToast(SCROLL_UP_ID, { front: true, ttlMs: 4_000 });
+     if (onScreen < rect.height / 2) askScrollUpToast();
    }
  };
 
