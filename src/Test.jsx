@@ -244,6 +244,19 @@ const playSound = async (soundRef) => {
     setMenuOpen(!menuOpen);
   };
 
+  // Every page opens at the top, not at the previous page's scroll position
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [currentPage]);
+
+  // Escape closes the side menu
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
@@ -336,6 +349,15 @@ const playSound = async (soundRef) => {
           <Menu style={{ color: colors.textLightColor }} size={28} />
         )}
       </button>
+
+      {/* Backdrop: clicking or tapping anywhere outside the open menu closes it */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-30"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Side Navigation Menu */}
       <div

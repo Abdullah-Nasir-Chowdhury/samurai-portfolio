@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import ChibiToast from './ChibiToast';
 
-// Shortly after someone arrives, the chibi pops up waving and asks about the easter eggs.
+// Once someone has had the page visible for 10 seconds, the chibi pops up waving and asks about the easter eggs.
 // Shows once per browser session. Add ?welcome to the URL to see it every time.
 
-const DELAY_MS = 1_500;
+const WAIT_MS = 10_000;
 const SESSION_KEY = 'welcome-toast-shown';
 
 const readFlag = () => { try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch { return false; } };
@@ -13,16 +13,25 @@ const writeFlag = () => { try { sessionStorage.setItem(SESSION_KEY, '1'); } catc
 export default function WelcomeToast({ colors }) {
   const [open, setOpen] = useState(false);
 
+  // Count only time the tab is visible, then open once
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const preview = params.has('welcome');
     if (params.has('thanks')) return; // keep the thank-you preview on its own
     if (!preview && readFlag()) return;
-    const id = setTimeout(() => {
-      if (!preview) writeFlag();
-      setOpen(true);
-    }, DELAY_MS);
-    return () => clearTimeout(id);
+    let visibleMs = 0;
+    let last = Date.now();
+    const id = setInterval(() => {
+      const now = Date.now();
+      if (document.visibilityState === 'visible') visibleMs += now - last;
+      last = now;
+      if (visibleMs >= WAIT_MS) {
+        clearInterval(id);
+        if (!preview) writeFlag();
+        setOpen(true);
+      }
+    }, 250);
+    return () => clearInterval(id);
   }, []);
 
   return (
