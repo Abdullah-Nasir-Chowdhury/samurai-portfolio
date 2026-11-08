@@ -4,12 +4,14 @@ import { createChibi } from './chibiSprite';
 
 // Glass toast at the bottom of the screen with the animated pixel chibi on the left.
 // The parent decides when it opens; this handles the look, the chibi, and auto-closing.
-//   action: 'bow' or 'wave' — what the chibi does when the toast opens
+//   action: 'bow', 'wave' or 'point' (hops with one hand pointing up) — what the chibi does when the toast opens
+//   lifeMs: how long it stays up before closing itself
+//   showChibi: false for a text-only toast (same glass card, no sprite)
 
 const LIFE_MS = 9_000;
-const CROPS = { bow: [4, 2], wave: [6, 0] }; // 40 × 40 window into the 48 × 64 sprite
+const CROPS = { bow: [4, 2], wave: [6, 0], point: [2, 0] }; // 40 × 40 window into the 48 × 64 sprite
 
-export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, jpSub, en, sig = '— 蝶踊り', chibiLabel }) {
+export default function ChibiToast({ colors, open, onClose, action = 'bow', lifeMs = LIFE_MS, showChibi = true, jp, jpSub, en, sig = '— 蝶踊り', chibiLabel }) {
   const canvasRef = useRef(null);
   const chibiRef = useRef(null);
   const hoverRef = useRef(false);
@@ -19,7 +21,7 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
   // Auto-close after LIFE_MS, paused while hovered
   useEffect(() => {
     if (!open) return;
-    let left = LIFE_MS;
+    let left = lifeMs;
     let last = Date.now();
     const id = setInterval(() => {
       const now = Date.now();
@@ -28,7 +30,7 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
       if (left <= 0) closeRef.current();
     }, 100);
     return () => clearInterval(id);
-  }, [open]);
+  }, [open, lifeMs]);
 
   // Run the chibi while the toast is open
   useEffect(() => {
@@ -41,7 +43,9 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
     const [cx, cy] = CROPS[action] || CROPS.bow;
     let t = 0;
     let waveAgainAt = Infinity;
-    if (action === 'wave') { chibi.wave(3.6); waveAgainAt = 5.4; } else chibi.bow();
+    if (action === 'wave') { chibi.wave(3.6); waveAgainAt = 5.4; }
+    else if (action === 'point') chibi.point(lifeMs / 1000);
+    else chibi.bow();
     let raf = 0;
     let last = performance.now();
     const frame = (now) => {
@@ -56,7 +60,7 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [open, action]);
+  }, [open, action, lifeMs]);
 
   const glow = (a) => `${colors.rgbaColor}${a})`;
 
@@ -64,28 +68,30 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
     <div
       role="status"
       aria-live="polite"
-      className={`chibi-toast${open ? ' show' : ''}`}
+      className={`chibi-toast${open ? ' show' : ''}${showChibi ? '' : ' no-chibi'}`}
       onMouseEnter={() => { hoverRef.current = true; }}
       onMouseLeave={() => { hoverRef.current = false; }}
       style={{
-        '--life': `${LIFE_MS / 1000}s`,
+        '--life': `${lifeMs / 1000}s`,
         background: `linear-gradient(150deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,.05) 35%, rgba(255,255,255,0) 55%, rgba(255,255,255,.06) 100%), ${glow(0.08)}`,
         boxShadow: `0 0 20px ${glow(0.4)}, 0 16px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.2), inset 0 0 0 1px ${glow(0.35)}`,
       }}
     >
-      <canvas
-        ref={canvasRef}
-        width={40}
-        height={40}
-        role="img"
-        aria-label={chibiLabel}
-        className="chibi-toast-sprite"
-        style={{
-          background: `radial-gradient(circle at 50% 40%, ${colors.dark}, ${colors.darkest} 75%)`,
-          borderColor: colors.ring,
-          boxShadow: `0 0 14px ${glow(0.45)}, inset 0 0 12px rgba(0,0,0,.5)`,
-        }}
-      />
+      {showChibi && (
+        <canvas
+          ref={canvasRef}
+          width={40}
+          height={40}
+          role="img"
+          aria-label={chibiLabel}
+          className="chibi-toast-sprite"
+          style={{
+            background: `radial-gradient(circle at 50% 40%, ${colors.dark}, ${colors.darkest} 75%)`,
+            borderColor: colors.ring,
+            boxShadow: `0 0 14px ${glow(0.45)}, inset 0 0 12px rgba(0,0,0,.5)`,
+          }}
+        />
+      )}
       <div className="chibi-toast-txt">
         <span lang="ja" className="chibi-toast-jp" style={{ color: colors.textColor }}>{jp}</span>
         {jpSub && <span lang="ja" className="chibi-toast-jpsub" style={{ color: colors.textLightColor }}>{jpSub}</span>}
@@ -111,6 +117,7 @@ export default function ChibiToast({ colors, open, onClose, action = 'bow', jp, 
           pointer-events: none; visibility: hidden;
           transition: opacity .35s ease, transform .55s cubic-bezier(.2,1.3,.4,1), filter .35s ease, visibility 0s linear .55s;
         }
+        .chibi-toast.no-chibi { grid-template-columns: 1fr; padding-left: 20px; }
         .chibi-toast.show {
           opacity: 1; transform: translate(-50%, 0) scale(1); filter: none; pointer-events: auto; visibility: visible;
           transition: opacity .35s ease, transform .55s cubic-bezier(.2,1.3,.4,1), filter .35s ease, visibility 0s;

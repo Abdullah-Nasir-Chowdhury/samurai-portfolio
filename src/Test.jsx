@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import OmikujiModal from './Omikuji';
 import ThankYouToast from './ThankYouToast';
 import WelcomeToast from './WelcomeToast';
+import ScrollUpToast, { SCROLL_UP_ID } from './ScrollUpToast';
+import { request as requestToast, useToastBlock } from './toastQueue';
 import { Flame, Droplet, Mountain, Sword, Wind, Circle, Menu, X, Github, Linkedin, Facebook, Twitter, Instagram, MessageCircle, BookOpen, User, Mail, FileText, Volume2, VolumeX, Download } from 'lucide-react';
 
 const hexToRgb = (hex) => {
@@ -280,6 +282,7 @@ const playSound = async (soundRef) => {
       <CustomCursor colors={colors} />
       <WelcomeToast colors={colors} />
       <ThankYouToast colors={colors} />
+      <ScrollUpToast colors={colors} />
       {/* Japanese Pattern Background */}
       <div 
         className="absolute inset-0 opacity-10"
@@ -1068,6 +1071,9 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
   // get their own backend demos later
   const [showOmikuji, setShowOmikuji] = useState(false);
   const closeOmikuji = useCallback(() => setShowOmikuji(false), []);
+  // No toasts while the omikuji is open; any that come due wait until it closes
+  useToastBlock(showOmikuji);
+  const photoRef = useRef(null);
 
   const handleBackend = () => {
     playSound(clickSoundRef);
@@ -1159,6 +1165,15 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
      const nextIndex = (frontendImages.indexOf(prevImage) + 1) % frontendImages.length;
      return frontendImages[nextIndex];
    });
+   // On a phone, if less than half the photo is on screen (the cards sit below it there),
+   // the chibi pops up pointing up so the visitor knows something changed up there
+   const isPhone = window.matchMedia('(pointer: coarse)').matches
+     && Math.min(window.screen.width, window.screen.height) < 768;
+   const rect = photoRef.current?.getBoundingClientRect();
+   if (isPhone && rect) {
+     const onScreen = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+     if (onScreen < rect.height / 2) requestToast(SCROLL_UP_ID, { front: true, ttlMs: 4_000 });
+   }
  };
 
   return (
@@ -1266,7 +1281,8 @@ function HomePage({ playSound, clickSoundRef, element, setElement, colors, profi
               boxShadow: '0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.5)'
             }}
           >
-            <img 
+            <img
+              ref={photoRef}
               src={profileImage}
               alt="Chowdhury Abdulla Nasir" 
               className="w-full h-full object-cover transition-all duration-500"

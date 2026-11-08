@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import ChibiToast from './ChibiToast';
+import { useToastTurn } from './toastQueue';
 
 // After a visitor has had the page visible for a minute, the chibi bows and says thanks.
 // Shows once per browser session. Add ?thanks to the URL to see it after 3 seconds.
+// It waits its turn if another toast or the omikuji is up.
 
 const WAIT_MS = 60_000;
 const SESSION_KEY = 'thanks-toast-shown';
@@ -11,9 +13,9 @@ const readFlag = () => { try { return sessionStorage.getItem(SESSION_KEY) === '1
 const writeFlag = () => { try { sessionStorage.setItem(SESSION_KEY, '1'); } catch { /* storage blocked */ } };
 
 export default function ThankYouToast({ colors }) {
-  const [open, setOpen] = useState(false);
+  const [open, ask, done] = useToastTurn('thanks');
 
-  // Count only visible time, then open once
+  // Count only visible time, then ask for a turn once
   useEffect(() => {
     const preview = new URLSearchParams(window.location.search).has('thanks');
     if (!preview && readFlag()) return;
@@ -27,17 +29,17 @@ export default function ThankYouToast({ colors }) {
       if (visibleMs >= wait) {
         clearInterval(id);
         if (!preview) writeFlag();
-        setOpen(true);
+        ask();
       }
     }, 250);
     return () => clearInterval(id);
-  }, []);
+  }, [ask]);
 
   return (
     <ChibiToast
       colors={colors}
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={done}
       action="bow"
       jp="ありがとうございます"
       en="Thank you for spending a minute here. It means a lot."
